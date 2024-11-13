@@ -1,8 +1,22 @@
 'use client'
-
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 
+const getRandomChange = () => Math.floor(Math.random() * 1000) - 500;
+
 export default function LandingPage() {
+  const [cirroVotes, setCirroVotes] = useState(726000);
+  const [bixiiVotes, setBixiiVotes] = useState(314500);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCirroVotes(prev => prev + getRandomChange());
+      setBixiiVotes(prev => prev + getRandomChange());
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
       <header className="bg-white shadow-sm">
@@ -26,7 +40,6 @@ export default function LandingPage() {
           </div>
         </div>
       </header>
-
       <main className="flex-grow">
         <div className="max-w-7xl mx-auto py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center space-y-8">
@@ -58,10 +71,29 @@ export default function LandingPage() {
               <p className="mt-2 text-lg font-bold text-gray-600">[Newly Elected]</p>
               <p className="mt-1 text-lg font-bold text-gray-500">13.11.2024 - Present</p>
             </div>
+            <div className="mt-8 bg-white shadow-md rounded-lg p-6 w-full max-w-2xl">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-bold text-gray-900">Election Results</h3>
+                <span className="text-red-600 font-bold animate-pulse">LIVE</span>
+              </div>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center transition-all duration-500">
+                  <span className="text-lg font-semibold text-gray-700">CIRRO:</span>
+                  <span className="text-lg font-bold text-green-600">
+                    {cirroVotes.toLocaleString()} VOTES
+                  </span>
+                </div>
+                <div className="flex justify-between items-center transition-all duration-500">
+                  <span className="text-lg font-semibold text-gray-700">BIIXI:</span>
+                  <span className="text-lg font-bold text-red-600">
+                    {bixiiVotes.toLocaleString()} VOTES
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </main>
-
       <footer className="bg-white border-t border-gray-200">
         <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
           <p className="text-center text-sm text-gray-500">
