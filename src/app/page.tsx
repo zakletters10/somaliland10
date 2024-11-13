@@ -4,9 +4,16 @@ import Image from 'next/image'
 import { useState, useEffect } from 'react'
 
 export default function LandingPage() {
+  // Add total votes constant
+  const TOTAL_VOTES = 987000
+
   // State for percentages
   const [cirroPercentage, setCirroPercentage] = useState(68)
   const [biixiPercentage, setBiixiPercentage] = useState(29)
+
+  // Calculate vote counts - removed othersVotes
+  const cirroVotes = Math.round(TOTAL_VOTES * (cirroPercentage / 100))
+  const biixiVotes = Math.round(TOTAL_VOTES * (biixiPercentage / 100))
 
   useEffect(() => {
     // Function to update percentages
@@ -62,20 +69,25 @@ export default function LandingPage() {
       </header>
 
       <main className="flex-grow">
-        <div className="max-w-7xl mx-auto py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl sm:text-5xl font-bold text-center mb-12 text-gray-900">
-            13.11.2024 PRESIDENTIAL ELECTION
-            <span className="block text-xl sm:text-2xl text-gray-500 mt-3 font-medium">
-              Live Results
-            </span>
-          </h1>
+        <div className="max-w-7xl mx-auto py-4 sm:py-12 px-4 sm:px-6 lg:px-8">
+          {/* Move results section up for mobile */}
+          <div className="max-w-3xl mx-auto mb-8">
+            {/* Add election title */}
+            <h1 className="text-center text-2xl font-bold text-gray-900 mb-4">
+              13.11.2024 PRESIDENTIAL ELECTIONS
+            </h1>
 
-          <h2 className="text-3xl sm:text-4xl font-bold text-center mb-8 text-green-600">
-            CURRENT WINNER: President Abdirahman Mohamed Abdullahi
-          </h2>
-          
-          {/* Live Election Results */}
-          <div className="max-w-3xl mx-auto mb-12">
+            {/* Add live indicator */}
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <div className="w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse" />
+              <span className="text-red-600 font-bold">LIVE</span>
+            </div>
+
+            {/* Total votes counter - updated text color */}
+            <p className="text-center text-xl font-bold text-gray-900 mb-6">
+              Total Votes: {TOTAL_VOTES.toLocaleString()}
+            </p>
+
             <div className="flex justify-center space-x-32 mb-6">
               <div className="text-center">
                 <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-[#fb9304] mx-auto mb-2">
@@ -89,6 +101,9 @@ export default function LandingPage() {
                 </div>
                 <p className="text-2xl font-bold text-[#fb9304]">
                   CIRRO {cirroPercentage.toFixed(1)}%
+                  <span className="block text-lg">
+                    ({cirroVotes.toLocaleString()} votes)
+                  </span>
                 </p>
               </div>
               <div className="text-center">
@@ -103,23 +118,26 @@ export default function LandingPage() {
                 </div>
                 <p className="text-2xl font-bold text-[#0c6b04]">
                   BIIXI {biixiPercentage.toFixed(1)}%
+                  <span className="block text-lg">
+                    ({biixiVotes.toLocaleString()} votes)
+                  </span>
                 </p>
               </div>
             </div>
             
-            {/* Progress Bar */}
+            {/* Updated progress bar with faster transitions */}
             <div className="h-8 bg-gray-200 rounded-full overflow-hidden">
               <div className="flex h-full">
                 <div 
-                  className="bg-[#fb9304] h-full transition-all duration-1000" 
+                  className="bg-[#fb9304] h-full transform transition-all duration-500 ease-out" 
                   style={{ width: `${cirroPercentage}%` }}
                 />
                 <div 
-                  className="bg-[#0c6b04] h-full transition-all duration-1000" 
+                  className="bg-[#0c6b04] h-full transform transition-all duration-500 ease-out" 
                   style={{ width: `${biixiPercentage}%` }}
                 />
                 <div 
-                  className="bg-gray-400 h-full transition-all duration-1000" 
+                  className="bg-gray-400 h-full transform transition-all duration-500 ease-out" 
                   style={{ width: `${othersPercentage.toFixed(1)}%` }}
                 />
               </div>
