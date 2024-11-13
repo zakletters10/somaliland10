@@ -1,21 +1,41 @@
 'use client'
-import { useState, useEffect } from 'react'
-import Image from 'next/image'
 
-const getRandomChange = () => Math.floor(Math.random() * 1000) - 500;
+import Image from 'next/image'
+import { useState, useEffect } from 'react'
 
 export default function LandingPage() {
-  const [cirroVotes, setCirroVotes] = useState(726000);
-  const [bixiiVotes, setBixiiVotes] = useState(314500);
+  // State for percentages
+  const [cirroPercentage, setCirroPercentage] = useState(68)
+  const [biixiPercentage, setBiixiPercentage] = useState(29)
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCirroVotes(prev => prev + getRandomChange());
-      setBixiiVotes(prev => prev + getRandomChange());
-    }, 3000);
+    // Function to update percentages
+    const updatePercentages = () => {
+      // Random small fluctuation between -0.5 and +0.5
+      const cirroChange = (Math.random() - 0.5)
+      const biixiChange = (Math.random() - 0.5)
 
-    return () => clearInterval(interval);
-  }, []);
+      // Update percentages while keeping them within reasonable bounds
+      setCirroPercentage(prev => {
+        const newValue = prev + cirroChange
+        return newValue > 70 ? 70 : newValue < 66 ? 66 : newValue
+      })
+
+      setBiixiPercentage(prev => {
+        const newValue = prev + biixiChange
+        return newValue > 31 ? 31 : newValue < 27 ? 27 : newValue
+      })
+    }
+
+    // Update every 2 seconds
+    const interval = setInterval(updatePercentages, 2000)
+
+    // Cleanup on unmount
+    return () => clearInterval(interval)
+  }, [])
+
+  // Calculate others percentage
+  const othersPercentage = 100 - cirroPercentage - biixiPercentage
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
@@ -40,8 +60,88 @@ export default function LandingPage() {
           </div>
         </div>
       </header>
+
       <main className="flex-grow">
         <div className="max-w-7xl mx-auto py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
+          <h1 className="text-4xl sm:text-5xl font-bold text-center mb-12 text-gray-900">
+            13.11.2024 PRESIDENTIAL ELECTION
+            <span className="block text-xl sm:text-2xl text-gray-500 mt-3 font-medium">
+              Live Results
+            </span>
+          </h1>
+
+          <h2 className="text-3xl sm:text-4xl font-bold text-center mb-8 text-green-600">
+            CURRENT WINNER: President Abdirahman Mohamed Abdullahi
+          </h2>
+          
+          {/* Live Election Results */}
+          <div className="max-w-3xl mx-auto mb-12">
+            <div className="flex justify-center space-x-32 mb-6">
+              <div className="text-center">
+                <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-[#fb9304] mx-auto mb-2">
+                  <Image
+                    src="/images/abdirahman.jpg"
+                    alt="Cirro"
+                    width={96}
+                    height={96}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
+                <p className="text-2xl font-bold text-[#fb9304]">
+                  CIRRO {cirroPercentage.toFixed(1)}%
+                </p>
+              </div>
+              <div className="text-center">
+                <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-[#0c6b04] mx-auto mb-2">
+                  <Image
+                    src="/images/biixi.jpeg"
+                    alt="Biixi"
+                    width={96}
+                    height={96}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
+                <p className="text-2xl font-bold text-[#0c6b04]">
+                  BIIXI {biixiPercentage.toFixed(1)}%
+                </p>
+              </div>
+            </div>
+            
+            {/* Progress Bar */}
+            <div className="h-8 bg-gray-200 rounded-full overflow-hidden">
+              <div className="flex h-full">
+                <div 
+                  className="bg-[#fb9304] h-full transition-all duration-1000" 
+                  style={{ width: `${cirroPercentage}%` }}
+                />
+                <div 
+                  className="bg-[#0c6b04] h-full transition-all duration-1000" 
+                  style={{ width: `${biixiPercentage}%` }}
+                />
+                <div 
+                  className="bg-gray-400 h-full transition-all duration-1000" 
+                  style={{ width: `${othersPercentage.toFixed(1)}%` }}
+                />
+              </div>
+            </div>
+            
+            {/* Scale */}
+            <div className="flex justify-between mt-2 text-sm text-gray-600">
+              <span>0</span>
+              <span>20</span>
+              <span>40</span>
+              <span>50</span>
+              <span>60</span>
+              <span>80</span>
+              <span>100%</span>
+            </div>
+            
+            {/* Notes */}
+            <p className="text-gray-500 text-sm mt-4 text-center">
+              Notes: Live election results as of November 13, 2024. Results are updated in real-time.
+            </p>
+          </div>
+
           <div className="flex flex-col items-center space-y-8">
             <div className="flex flex-row items-center space-x-4 sm:space-x-8 lg:space-x-12">
               <div className="w-36 h-36 sm:w-64 sm:h-64 bg-gray-300 rounded-lg overflow-hidden">
@@ -71,29 +171,10 @@ export default function LandingPage() {
               <p className="mt-2 text-lg font-bold text-gray-600">[Newly Elected]</p>
               <p className="mt-1 text-lg font-bold text-gray-500">13.11.2024 - Present</p>
             </div>
-            <div className="mt-8 bg-white shadow-md rounded-lg p-6 w-full max-w-2xl">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-bold text-gray-900">Election Results</h3>
-                <span className="text-red-600 font-bold animate-pulse">LIVE</span>
-              </div>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center transition-all duration-500">
-                  <span className="text-lg font-semibold text-gray-700">CIRRO:</span>
-                  <span className="text-lg font-bold text-green-600">
-                    {cirroVotes.toLocaleString()} VOTES
-                  </span>
-                </div>
-                <div className="flex justify-between items-center transition-all duration-500">
-                  <span className="text-lg font-semibold text-gray-700">BIIXI:</span>
-                  <span className="text-lg font-bold text-red-600">
-                    {bixiiVotes.toLocaleString()} VOTES
-                  </span>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </main>
+
       <footer className="bg-white border-t border-gray-200">
         <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
           <p className="text-center text-sm text-gray-500">
