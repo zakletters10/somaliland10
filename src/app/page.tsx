@@ -5,14 +5,13 @@ import { useState, useEffect } from 'react'
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from 'recharts';
 
 export default function LandingPage() {
-  // Adjusted total votes to achieve desired percentages and difference
   const totalVotes = 920000
 
   // Base percentages
   const [cirroPercentage, setCirroPercentage] = useState(62.8)
   const [biixiPercentage, setBiixiPercentage] = useState(35.2)
   const [thirdPercentage] = useState(2.0)
-  const [processedPercentage] = useState(100)
+  const [processedPercentage] = useState(94)
 
   // Add subtle fluctuation
   useEffect(() => {
@@ -36,9 +35,10 @@ export default function LandingPage() {
     return () => clearInterval(interval)
   }, [])
   
-  // Calculate exact vote counts
-  const cirroVotes = Math.round(totalVotes * (cirroPercentage / 100))
-  const biixiVotes = Math.round(totalVotes * (biixiPercentage / 100))
+  // Calculate exact vote counts based on processed percentage
+  const processedVotes = Math.round(totalVotes * (processedPercentage / 100))
+  const cirroVotes = Math.round(processedVotes * (cirroPercentage / 100))
+  const biixiVotes = Math.round(processedVotes * (biixiPercentage / 100))
 
   // Calculate others percentage
   const othersPercentage = 100 - cirroPercentage - biixiPercentage - thirdPercentage
