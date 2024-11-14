@@ -51,8 +51,24 @@ export default function LandingPage() {
     { name: 'HILAAC', value: 7, color: '#gray' }
   ];
 
+  // Add visitor counter state
+  const [visitorCount, setVisitorCount] = useState(96000)
+
+  // Add visitor counter animation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setVisitorCount(current => {
+        // Random change between -100 and +300 (biased towards increase)
+        const change = Math.floor(Math.random() * 400) - 100
+        return current + change
+      })
+    }, 3000) // Update every 3 seconds
+
+    return () => clearInterval(interval)
+  }, [])
+
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100">
+    <div className="min-h-screen flex flex-col bg-gray-100 relative">
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto py-2 sm:py-4 px-4 sm:px-6 lg:px-8">
           <div className="flex flex-row items-center space-x-3 sm:space-x-4">
@@ -306,6 +322,15 @@ export default function LandingPage() {
           </p>
         </div>
       </footer>
+
+      {/* Floating visitor counter with updated styling */}
+      <div className="fixed bottom-4 right-4 bg-black/80 text-white px-6 py-3 rounded-full shadow-lg flex items-center space-x-3 animate-pulse z-50">
+        <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse" />
+        <span className="text-base sm:text-lg font-bold">
+          {visitorCount.toLocaleString()} 
+          <span className="font-medium ml-1">live visitors</span>
+        </span>
+      </div>
     </div>
   )
 }
