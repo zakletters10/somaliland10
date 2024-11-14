@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from 'recharts';
 
 export default function LandingPage() {
@@ -12,6 +12,9 @@ export default function LandingPage() {
   const [biixiPercentage, setBiixiPercentage] = useState(35.2)
   const [thirdPercentage] = useState(2.0)
   const [processedPercentage, setProcessedPercentage] = useState(70)
+
+  // Use ref to track latest cirro percentage
+  const cirroRef = useRef(62.8)
 
   // Update values after component mounts
   useEffect(() => {
@@ -29,6 +32,7 @@ export default function LandingPage() {
     setProcessedPercentage(initialProcessed)
     setCirroPercentage(initialCirro)
     setBiixiPercentage(initialBiixi)
+    cirroRef.current = initialCirro
 
     // Set up interval for updates
     const interval = setInterval(() => {
@@ -42,15 +46,13 @@ export default function LandingPage() {
       // Small positive fluctuation
       const fluctuation = Math.random() * 0.1
       
-      // Update percentages
-      setCirroPercentage(current => {
-        const newValue = Math.min(current + fluctuation, 62.9)
-        return newValue
-      })
+      // Update Cirro's percentage
+      const newCirroValue = Math.min(62.8 + (progress * 0.1) + fluctuation, 62.9)
+      setCirroPercentage(newCirroValue)
+      cirroRef.current = newCirroValue
 
-      setBiixiPercentage(current => {
-        return 98 - cirroPercentage
-      })
+      // Update Biixi's percentage based on Cirro's new value
+      setBiixiPercentage(98 - cirroRef.current)
     }, 5000)
 
     return () => clearInterval(interval)
@@ -60,7 +62,6 @@ export default function LandingPage() {
   const processedVotes = Math.round(totalVotes * (processedPercentage / 100))
   const cirroVotes = Math.round(processedVotes * (cirroPercentage / 100))
   const biixiVotes = Math.round(processedVotes * (biixiPercentage / 100))
-  const thirdVotes = Math.round(processedVotes * (thirdPercentage / 100))
 
   // Calculate others percentage
   const othersPercentage = 100 - cirroPercentage - biixiPercentage - thirdPercentage
