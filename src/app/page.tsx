@@ -2,14 +2,15 @@
 
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from 'recharts';
 
 export default function LandingPage() {
   // Add total votes constant
   const TOTAL_VOTES = 987000
 
-  // State for percentages
-  const [cirroPercentage, setCirroPercentage] = useState(68)
-  const [biixiPercentage, setBiixiPercentage] = useState(29)
+  // State for percentages - updated initial values
+  const [cirroPercentage, setCirroPercentage] = useState(63)
+  const [biixiPercentage, setBiixiPercentage] = useState(35)
 
   // Calculate vote counts - removed othersVotes
   const cirroVotes = Math.round(TOTAL_VOTES * (cirroPercentage / 100))
@@ -22,15 +23,15 @@ export default function LandingPage() {
       const cirroChange = (Math.random() - 0.5)
       const biixiChange = (Math.random() - 0.5)
 
-      // Update percentages while keeping them within reasonable bounds
+      // Updated bounds for new percentages
       setCirroPercentage(prev => {
         const newValue = prev + cirroChange
-        return newValue > 70 ? 70 : newValue < 66 ? 66 : newValue
+        return newValue > 65 ? 65 : newValue < 61 ? 61 : newValue
       })
 
       setBiixiPercentage(prev => {
         const newValue = prev + biixiChange
-        return newValue > 31 ? 31 : newValue < 27 ? 27 : newValue
+        return newValue > 37 ? 37 : newValue < 33 ? 33 : newValue
       })
     }
 
@@ -43,6 +44,14 @@ export default function LandingPage() {
 
   // Calculate others percentage
   const othersPercentage = 100 - cirroPercentage - biixiPercentage
+
+  const partyData = [
+    { name: 'WADDANI', value: 37, color: '#fb9304' },
+    { name: 'KAAH', value: 20, color: '#eb242b' },
+    { name: 'KULMIYE', value: 19, color: '#0c6c04' },
+    { name: 'HORSEED', value: 15, color: '#87d662' },
+    { name: 'HILAAC', value: 9, color: '#gray' }
+  ];
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
@@ -69,28 +78,31 @@ export default function LandingPage() {
       </header>
 
       <main className="flex-grow">
-        <div className="max-w-7xl mx-auto py-4 sm:py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto py-2 sm:py-12 px-4 sm:px-6 lg:px-8">
           {/* Move results section up for mobile */}
-          <div className="max-w-3xl mx-auto mb-8">
+          <div className="max-w-3xl mx-auto mb-4 sm:mb-8">
             {/* Add election title */}
-            <h1 className="text-center text-2xl font-bold text-gray-900 mb-4">
+            <h1 className="text-center text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-4">
               13.11.2024 PRESIDENTIAL ELECTIONS
             </h1>
 
             {/* Add live indicator */}
-            <div className="flex items-center justify-center gap-2 mb-4">
+            <div className="flex items-center justify-center gap-2 mb-2 sm:mb-4">
               <div className="w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse" />
               <span className="text-red-600 font-bold">LIVE</span>
             </div>
 
-            {/* Total votes counter - updated text color */}
-            <p className="text-center text-xl font-bold text-gray-900 mb-6">
+            {/* Total votes counter - updated with counted votes */}
+            <p className="text-center text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">
               Total Votes: {TOTAL_VOTES.toLocaleString()}
+              <span className="block text-sm sm:text-base text-gray-600 mt-0.5 sm:mt-1">
+                Vote Count Progress: 70% of total votes processed ({(TOTAL_VOTES * 0.7).toLocaleString()} votes)
+              </span>
             </p>
 
-            <div className="flex justify-center space-x-32 mb-6">
+            <div className="flex justify-center space-x-16 sm:space-x-32 mb-4 sm:mb-6">
               <div className="text-center">
-                <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-[#fb9304] mx-auto mb-2">
+                <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-full overflow-hidden border-4 border-[#fb9304] mx-auto mb-1 sm:mb-2">
                   <Image
                     src="/images/abdirahman.jpg"
                     alt="Cirro"
@@ -99,15 +111,15 @@ export default function LandingPage() {
                     className="object-cover w-full h-full"
                   />
                 </div>
-                <p className="text-2xl font-bold text-[#fb9304]">
+                <p className="text-xl sm:text-2xl font-bold text-[#fb9304]">
                   CIRRO {cirroPercentage.toFixed(1)}%
-                  <span className="block text-lg">
+                  <span className="block text-base sm:text-lg">
                     ({cirroVotes.toLocaleString()} votes)
                   </span>
                 </p>
               </div>
               <div className="text-center">
-                <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-[#0c6b04] mx-auto mb-2">
+                <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-full overflow-hidden border-4 border-[#0c6b04] mx-auto mb-1 sm:mb-2">
                   <Image
                     src="/images/biixi.jpeg"
                     alt="Biixi"
@@ -116,9 +128,9 @@ export default function LandingPage() {
                     className="object-cover w-full h-full"
                   />
                 </div>
-                <p className="text-2xl font-bold text-[#0c6b04]">
+                <p className="text-xl sm:text-2xl font-bold text-[#0c6b04]">
                   BIIXI {biixiPercentage.toFixed(1)}%
-                  <span className="block text-lg">
+                  <span className="block text-base sm:text-lg">
                     ({biixiVotes.toLocaleString()} votes)
                   </span>
                 </p>
@@ -158,6 +170,117 @@ export default function LandingPage() {
             <p className="text-gray-500 text-sm mt-4 text-center">
               Notes: Live election results as of November 13, 2024. Results are updated in real-time.
             </p>
+          </div>
+
+          {/* Political Party Results Chart */}
+          <div className="max-w-3xl mx-auto mb-8">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 text-center">
+              Political Party Results
+            </h2>
+            <div className="h-64 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart 
+                  data={partyData} 
+                  layout="vertical"
+                  margin={{ top: 5, right: 50, left: 80, bottom: 5 }}
+                >
+                  <XAxis 
+                    type="number" 
+                    hide 
+                  />
+                  <YAxis 
+                    type="category" 
+                    dataKey="name" 
+                    axisLine={false}
+                    tickLine={false}
+                    width={75}
+                    style={{
+                      fontSize: '14px',
+                      fontWeight: 500
+                    }}
+                  />
+                  <Bar 
+                    dataKey="value" 
+                    radius={[0, 4, 4, 0]}
+                    label={{ 
+                      position: 'right',
+                      formatter: (value: number) => `${value}%`,
+                      fill: '#000',
+                      fontSize: 14,
+                      fontWeight: 'bold',
+                      dx: 5
+                    }}
+                  >
+                    {partyData.map((entry, index) => (
+                      <Cell 
+                        key={`cell-${index}`} 
+                        fill={entry.color}
+                      />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Regional Results Table */}
+          <div className="max-w-3xl mx-auto mb-8 overflow-x-auto">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 text-center">
+              Regional Results Breakdown
+            </h2>
+            <div className="inline-block min-w-full align-middle">
+              <div className="overflow-hidden border border-gray-200 rounded-lg shadow">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th scope="col" className="px-4 py-3 text-left text-sm font-semibold text-gray-900">
+                        Region Name
+                      </th>
+                      <th scope="col" className="px-4 py-3 text-right text-sm font-semibold text-gray-900">
+                        Total Votes
+                      </th>
+                      <th scope="col" className="px-4 py-3 text-right text-sm font-semibold text-[#fb9304]">
+                        WADDANI
+                      </th>
+                      <th scope="col" className="px-4 py-3 text-right text-sm font-semibold text-[#0c6b04]">
+                        KULMIYE
+                      </th>
+                      <th scope="col" className="px-4 py-3 text-right text-sm font-semibold text-gray-600">
+                        UCID
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200 bg-white">
+                    {[
+                      { name: 'AWDAL', votes: 75509, waddani: 78.8, kulmiye: 20.9, ucid: 0.2 },
+                      { name: 'MAROODIJEEX', votes: 233120, waddani: 48.7, kulmiye: 50.1, ucid: 1.2 },
+                      { name: 'SAAXIL', votes: 36319, waddani: 45.6, kulmiye: 54.0, ucid: 0.3 },
+                      { name: 'TOGDHEER', votes: 103207, waddani: 84.9, kulmiye: 14.8, ucid: 0.3 },
+                      { name: 'SOOL', votes: 14285, waddani: 83.2, kulmiye: 16.2, ucid: 0.6 },
+                      { name: 'SANAAG', votes: 41216, waddani: 89.8, kulmiye: 9.9, ucid: 0.2 },
+                    ].map((region) => (
+                      <tr key={region.name} className="hover:bg-gray-50">
+                        <td className="whitespace-nowrap px-4 py-3 text-sm font-medium text-gray-900">
+                          {region.name}
+                        </td>
+                        <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-900 text-right">
+                          {region.votes.toLocaleString()}
+                        </td>
+                        <td className="whitespace-nowrap px-4 py-3 text-sm text-[#fb9304] font-semibold text-right">
+                          {region.waddani}%
+                        </td>
+                        <td className="whitespace-nowrap px-4 py-3 text-sm text-[#0c6b04] font-semibold text-right">
+                          {region.kulmiye}%
+                        </td>
+                        <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-600 text-right">
+                          {region.ucid}%
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
 
           <div className="flex flex-col items-center space-y-8">
