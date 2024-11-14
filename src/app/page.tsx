@@ -5,63 +5,43 @@ import { useState, useEffect } from 'react'
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from 'recharts';
 
 export default function LandingPage() {
-  // First declare all state variables
-  const [cirroPercentage, setCirroPercentage] = useState(60.5)
-  const [biixiPercentage, setBiixiPercentage] = useState(34.5)
-  const [otherPercentage, setOtherPercentage] = useState(1.0)
-  const [processedPercentage, setProcessedPercentage] = useState(70)
+  // Adjusted total votes to achieve desired percentages and difference
+  const totalVotes = 920000
 
-  // Then use them in calculations
-  const TOTAL_VOTES = 987000
-  const COUNTED_VOTES = Math.round(TOTAL_VOTES * (processedPercentage / 100))
+  // Base percentages
+  const [cirroPercentage, setCirroPercentage] = useState(62.8)
+  const [biixiPercentage, setBiixiPercentage] = useState(35.2)
+  const [thirdPercentage] = useState(2.0)
+  const [processedPercentage] = useState(100)
 
-  // Calculate vote counts
-  const cirroVotes = Math.round(COUNTED_VOTES * (cirroPercentage / 100))
-  const biixiVotes = Math.round(COUNTED_VOTES * (biixiPercentage / 100))
-
+  // Add subtle fluctuation
   useEffect(() => {
-    const updatePercentages = () => {
-      // Even slower increases for a longer count
-      const remainingPercentage = 100 - processedPercentage
-      const progressIncrease = Math.min(
-        (Math.random() * 0.01) * (remainingPercentage / 30), // Reduced from 0.02 to 0.01
-        0.04  // Reduced from 0.08 to 0.04
-      )
-
-      setProcessedPercentage(prev => {
-        const newValue = prev + progressIncrease
-        return Math.min(newValue, 100)
-      })
-
-      // Slower candidate percentage changes
-      const cirroChange = Math.min(
-        (Math.random() * 0.004) * (remainingPercentage / 30), // Reduced from 0.008 to 0.004
-        0.02  // Reduced from 0.04 to 0.02
-      )
-      const biixiChange = Math.min(
-        (Math.random() * 0.003) * (remainingPercentage / 30), // Reduced from 0.004 to 0.003
-        0.015 // Reduced accordingly
-      )
-
+    const interval = setInterval(() => {
+      // Random small fluctuation between -0.1 and +0.1
+      const fluctuation = (Math.random() * 0.2 - 0.1)
+      
+      // Update Cirro's percentage within bounds
       setCirroPercentage(prev => {
-        const newValue = prev + cirroChange
-        return Math.min(newValue, 62.8)
+        const newValue = 62.8 + fluctuation
+        return Math.min(Math.max(newValue, 62.7), 62.9)
       })
 
+      // Update Biixi's percentage in opposite direction to maintain total
       setBiixiPercentage(prev => {
-        const newValue = prev + biixiChange
-        return Math.min(newValue, 36.2)
+        const newValue = 35.2 - fluctuation
+        return Math.min(Math.max(newValue, 35.1), 35.3)
       })
+    }, 5000) // Update every 5 seconds
 
-      setOtherPercentage(1.0)
-    }
-
-    const interval = setInterval(updatePercentages, 12000) // Increased from 8000 to 12000 ms
     return () => clearInterval(interval)
-  }, [processedPercentage])
+  }, [])
+  
+  // Calculate exact vote counts
+  const cirroVotes = Math.round(totalVotes * (cirroPercentage / 100))
+  const biixiVotes = Math.round(totalVotes * (biixiPercentage / 100))
 
   // Calculate others percentage
-  const othersPercentage = 100 - cirroPercentage - biixiPercentage - otherPercentage
+  const othersPercentage = 100 - cirroPercentage - biixiPercentage - thirdPercentage
 
   const partyData = [
     { name: 'WADDANI', value: 37, color: '#fb9304' },
@@ -112,9 +92,9 @@ export default function LandingPage() {
 
             {/* Total votes counter - updated with counted votes */}
             <p className="text-center text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">
-              Total Expected Votes: {TOTAL_VOTES.toLocaleString()}
+              Total Expected Votes: {totalVotes.toLocaleString()}
               <span className="block text-sm sm:text-base text-gray-600 mt-0.5 sm:mt-1">
-                Vote Count Progress: {processedPercentage.toFixed(1)}% of total votes processed ({Math.round(TOTAL_VOTES * (processedPercentage / 100)).toLocaleString()} votes)
+                Vote Count Progress: {processedPercentage.toFixed(1)}% of total votes processed ({Math.round(totalVotes * (processedPercentage / 100)).toLocaleString()} votes)
               </span>
             </p>
 
@@ -194,6 +174,9 @@ export default function LandingPage() {
           <div className="max-w-3xl mx-auto mb-8">
             <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 text-center">
               Political Party Results
+              <span className="block text-sm text-red-600 font-normal mt-1">
+                Still counting - Results are preliminary
+              </span>
             </h2>
             <div className="h-64 w-full">
               <ResponsiveContainer width="100%" height="100%">
@@ -222,7 +205,7 @@ export default function LandingPage() {
                     radius={[0, 4, 4, 0]}
                     label={{ 
                       position: 'right',
-                      formatter: (value: number) => `${value}%`,
+                      formatter: (value: number) => `${value}% *`,
                       fill: '#000',
                       fontSize: 14,
                       fontWeight: 'bold',
@@ -239,6 +222,9 @@ export default function LandingPage() {
                 </BarChart>
               </ResponsiveContainer>
             </div>
+            <p className="text-sm text-gray-500 text-center mt-2">
+              * Preliminary results - Vote counting in progress
+            </p>
           </div>
 
           {/* Regional Results Table */}
@@ -316,7 +302,7 @@ export default function LandingPage() {
       <footer className="bg-white border-t border-gray-200">
         <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
           <p className="text-center text-sm text-gray-500">
-            © {new Date().getFullYear()} Government of Somaliland. All rights reserved.
+            © {new Date().getFullYear()} Somaliland. All rights reserved.
           </p>
         </div>
       </footer>
