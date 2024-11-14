@@ -5,52 +5,86 @@ import { useState, useEffect } from 'react'
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from 'recharts';
 
 export default function LandingPage() {
-  // Add total votes constant
+  // First declare all state variables
+  const [cirroPercentage, setCirroPercentage] = useState(60.5)
+  const [biixiPercentage, setBiixiPercentage] = useState(34.5)
+  const [otherPercentage, setOtherPercentage] = useState(1.0)
+  const [processedPercentage, setProcessedPercentage] = useState(70)
+
+  // Then use them in calculations
   const TOTAL_VOTES = 987000
+  const COUNTED_VOTES = Math.round(TOTAL_VOTES * (processedPercentage / 100))
 
-  // State for percentages - updated initial values
-  const [cirroPercentage, setCirroPercentage] = useState(63)
-  const [biixiPercentage, setBiixiPercentage] = useState(35)
-
-  // Calculate vote counts - removed othersVotes
-  const cirroVotes = Math.round(TOTAL_VOTES * (cirroPercentage / 100))
-  const biixiVotes = Math.round(TOTAL_VOTES * (biixiPercentage / 100))
+  // Calculate vote counts
+  const cirroVotes = Math.round(COUNTED_VOTES * (cirroPercentage / 100))
+  const biixiVotes = Math.round(COUNTED_VOTES * (biixiPercentage / 100))
 
   useEffect(() => {
-    // Function to update percentages
     const updatePercentages = () => {
-      // Random small fluctuation between -0.5 and +0.5
-      const cirroChange = (Math.random() - 0.5)
-      const biixiChange = (Math.random() - 0.5)
+      // Even slower increases for a longer count
+      const remainingPercentage = 100 - processedPercentage
+      const progressIncrease = Math.min(
+        (Math.random() * 0.01) * (remainingPercentage / 30), // Reduced from 0.02 to 0.01
+        0.04  // Reduced from 0.08 to 0.04
+      )
 
-      // Updated bounds for new percentages
+      setProcessedPercentage(prev => {
+        const newValue = prev + progressIncrease
+        return Math.min(newValue, 100)
+      })
+
+      // Slower candidate percentage changes
+      const cirroChange = Math.min(
+        (Math.random() * 0.004) * (remainingPercentage / 30), // Reduced from 0.008 to 0.004
+        0.02  // Reduced from 0.04 to 0.02
+      )
+      const biixiChange = Math.min(
+        (Math.random() * 0.003) * (remainingPercentage / 30), // Reduced from 0.004 to 0.003
+        0.015 // Reduced accordingly
+      )
+
       setCirroPercentage(prev => {
         const newValue = prev + cirroChange
-        return newValue > 65 ? 65 : newValue < 61 ? 61 : newValue
+        return Math.min(newValue, 62.8)
       })
 
       setBiixiPercentage(prev => {
         const newValue = prev + biixiChange
-        return newValue > 37 ? 37 : newValue < 33 ? 33 : newValue
+        return Math.min(newValue, 36.2)
       })
+
+      setOtherPercentage(1.0)
     }
 
-    // Update every 2 seconds
-    const interval = setInterval(updatePercentages, 2000)
-
-    // Cleanup on unmount
+    const interval = setInterval(updatePercentages, 12000) // Increased from 8000 to 12000 ms
     return () => clearInterval(interval)
-  }, [])
+  }, [processedPercentage])
 
   // Calculate others percentage
-  const othersPercentage = 100 - cirroPercentage - biixiPercentage
+  const othersPercentage = 100 - cirroPercentage - biixiPercentage - otherPercentage
 
   const partyData = [
     { name: 'WADDANI', value: 37, color: '#fb9304' },
-    { name: 'KAAH', value: 20, color: '#eb242b' },
-    { name: 'KULMIYE', value: 19, color: '#0c6c04' },
-    { name: 'HORSEED', value: 15, color: '#87d662' },
-    { name: 'HILAAC', value: 9, color: '#gray' }
+    { name: 'KAAH', value: 22, color: '#eb242b' },
+    { name: 'KULMIYE', value: 17.2, color: '#0c6c04' },
+    { name: 'HORSEED', value: 16.8, color: '#87d662' },
+    { name: 'HILAAC', value: 7, color: '#gray' }
+  ];
+
+  const regions = [
+    { 
+      name: 'Maroodi Jeex',
+      waddani: 37,
+      kulmiye: 17,
+      ucid: 12
+    },
+    { 
+      name: 'Togdheer',
+      waddani: 35,
+      kulmiye: 18,
+      ucid: 11
+    },
+    // ... add other regions
   ];
 
   return (
@@ -94,9 +128,9 @@ export default function LandingPage() {
 
             {/* Total votes counter - updated with counted votes */}
             <p className="text-center text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">
-              Total Votes: {TOTAL_VOTES.toLocaleString()}
+              Total Expected Votes: {TOTAL_VOTES.toLocaleString()}
               <span className="block text-sm sm:text-base text-gray-600 mt-0.5 sm:mt-1">
-                Vote Count Progress: 70% of total votes processed ({(TOTAL_VOTES * 0.7).toLocaleString()} votes)
+                Vote Count Progress: {processedPercentage.toFixed(1)}% of total votes processed ({Math.round(TOTAL_VOTES * (processedPercentage / 100)).toLocaleString()} votes)
               </span>
             </p>
 
@@ -224,30 +258,19 @@ export default function LandingPage() {
           </div>
 
           {/* Regional Results Table */}
-          <div className="max-w-3xl mx-auto mb-8 overflow-x-auto">
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 text-center">
-              Regional Results Breakdown
-            </h2>
-            <div className="inline-block min-w-full align-middle">
-              <div className="overflow-hidden border border-gray-200 rounded-lg shadow">
+          <div className="mt-8 sm:mt-12 mb-8 sm:mb-12">
+            <h3 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-black">Regional Results</h3>
+            
+            <div className="overflow-x-auto -mx-4 sm:mx-0 shadow-sm rounded-lg">
+              <div className="inline-block min-w-full align-middle border border-gray-200 rounded-lg">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th scope="col" className="px-4 py-3 text-left text-sm font-semibold text-gray-900">
-                        Region Name
-                      </th>
-                      <th scope="col" className="px-4 py-3 text-right text-sm font-semibold text-gray-900">
-                        Total Votes
-                      </th>
-                      <th scope="col" className="px-4 py-3 text-right text-sm font-semibold text-[#fb9304]">
-                        WADDANI
-                      </th>
-                      <th scope="col" className="px-4 py-3 text-right text-sm font-semibold text-[#0c6b04]">
-                        KULMIYE
-                      </th>
-                      <th scope="col" className="px-4 py-3 text-right text-sm font-semibold text-gray-600">
-                        UCID
-                      </th>
+                      <th scope="col" className="py-3 px-3 text-left text-sm font-semibold text-gray-900">Region Name</th>
+                      <th scope="col" className="py-3 px-3 text-right text-sm font-semibold text-gray-900">Total Votes</th>
+                      <th scope="col" className="py-3 px-3 text-right text-sm font-semibold text-[#fb9304]">WADDANI</th>
+                      <th scope="col" className="py-3 px-3 text-right text-sm font-semibold text-[#0c6c04]">KULMIYE</th>
+                      <th scope="col" className="py-3 px-3 text-right text-sm font-semibold text-gray-600">UCID</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
@@ -257,24 +280,14 @@ export default function LandingPage() {
                       { name: 'SAAXIL', votes: 36319, waddani: 45.6, kulmiye: 54.0, ucid: 0.3 },
                       { name: 'TOGDHEER', votes: 103207, waddani: 84.9, kulmiye: 14.8, ucid: 0.3 },
                       { name: 'SOOL', votes: 14285, waddani: 83.2, kulmiye: 16.2, ucid: 0.6 },
-                      { name: 'SANAAG', votes: 41216, waddani: 89.8, kulmiye: 9.9, ucid: 0.2 },
+                      { name: 'SANAAG', votes: 41216, waddani: 89.8, kulmiye: 9.9, ucid: 0.2 }
                     ].map((region) => (
-                      <tr key={region.name} className="hover:bg-gray-50">
-                        <td className="whitespace-nowrap px-4 py-3 text-sm font-medium text-gray-900">
-                          {region.name}
-                        </td>
-                        <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-900 text-right">
-                          {region.votes.toLocaleString()}
-                        </td>
-                        <td className="whitespace-nowrap px-4 py-3 text-sm text-[#fb9304] font-semibold text-right">
-                          {region.waddani}%
-                        </td>
-                        <td className="whitespace-nowrap px-4 py-3 text-sm text-[#0c6b04] font-semibold text-right">
-                          {region.kulmiye}%
-                        </td>
-                        <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-600 text-right">
-                          {region.ucid}%
-                        </td>
+                      <tr key={region.name} className="even:bg-gray-50">
+                        <td className="whitespace-nowrap py-2 px-3 text-sm text-gray-900">{region.name}</td>
+                        <td className="whitespace-nowrap py-2 px-3 text-sm text-right text-gray-900">{region.votes.toLocaleString()}</td>
+                        <td className="whitespace-nowrap py-2 px-3 text-sm text-right font-medium text-[#fb9304]">{region.waddani}%</td>
+                        <td className="whitespace-nowrap py-2 px-3 text-sm text-right font-medium text-[#0c6c04]">{region.kulmiye}%</td>
+                        <td className="whitespace-nowrap py-2 px-3 text-sm text-right font-medium text-gray-600">{region.ucid}%</td>
                       </tr>
                     ))}
                   </tbody>
