@@ -56,9 +56,9 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
       <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
-            <div className="w-16 h-16 sm:w-10 sm:h-10 bg-gray-300 rounded-full overflow-hidden">
+        <div className="max-w-7xl mx-auto py-2 sm:py-4 px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-row items-center space-x-3 sm:space-x-4">
+            <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-300 rounded-full overflow-hidden">
               <Image
                 src="/images/emblem.png?height=64&width=64"
                 alt="Somaliland Badge"
@@ -67,9 +67,9 @@ export default function LandingPage() {
                 className="object-cover w-full h-full"
               />
             </div>
-            <h3 className="text-xl font-bold text-gray-900 text-center sm:text-left">
+            <h3 className="text-lg sm:text-xl font-bold text-gray-900">
               President of the Republic of Somaliland 
-              <span className="block sm:inline text-base italic text-gray-500 mt-1 sm:mt-0 sm:ml-2">
+              <span className="block sm:inline text-sm sm:text-base italic text-gray-500 mt-0.5 sm:mt-0 sm:ml-2">
                 Madaxweynaha Soomaaliland
               </span>
             </h3>
@@ -78,7 +78,7 @@ export default function LandingPage() {
       </header>
 
       <main className="flex-grow">
-        <div className="max-w-7xl mx-auto py-2 sm:py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto py-1 sm:py-12 px-4 sm:px-6 lg:px-8">
           {/* Move results section up for mobile */}
           <div className="max-w-3xl mx-auto mb-4 sm:mb-8">
             {/* Add election title */}
