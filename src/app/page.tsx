@@ -21,14 +21,14 @@ export default function LandingPage() {
       const fluctuation = (Math.random() * 0.2 - 0.1)
       
       // Update Cirro's percentage within bounds
-      setCirroPercentage(prev => {
-        const newValue = 62.8 + fluctuation
+      setCirroPercentage(currentCirro => {
+        const newValue = currentCirro + fluctuation
         return Math.min(Math.max(newValue, 62.7), 62.9)
       })
 
       // Update Biixi's percentage in opposite direction to maintain total
-      setBiixiPercentage(prev => {
-        const newValue = 35.2 - fluctuation
+      setBiixiPercentage(currentBiixi => {
+        const newValue = currentBiixi - fluctuation
         return Math.min(Math.max(newValue, 35.1), 35.3)
       })
     }, 5000) // Update every 5 seconds
