@@ -99,9 +99,9 @@ export default function LandingPage() {
   const partyData = [
     { name: 'WADDANI', value: 37, color: '#fb9304' },
     { name: 'KAAH', value: 22, color: '#eb242b' },
-    { name: 'HORSEED', value: 17.2, color: '#87d662' },
-    { name: 'KULMIYE', value: 16.8, color: '#0c6c04' },
-    { name: 'HILAAC', value: 7, color: '#gray' }
+    { name: 'KULMIYE', value: 20.8, color: '#0c6c04' },
+    { name: 'HORSEED', value: 18.2, color: '#87d662' },
+    { name: 'HILAAC', value: 2, color: '#gray' }
   ];
 
   // Add visitor counter state
@@ -131,6 +131,40 @@ export default function LandingPage() {
 
     return () => clearInterval(interval)
   }, [])
+
+  // Add scare prank state
+  const [showScare, setShowScare] = useState(false)
+  const scareTimeoutRef = useRef<NodeJS.Timeout>()
+
+  // Add scare effect after a delay
+  useEffect(() => {
+    // Start scare after 5 seconds
+    const scareStart = setTimeout(() => {
+      setShowScare(true)
+      
+      // End scare after 15 seconds
+      scareTimeoutRef.current = setTimeout(() => {
+        setShowScare(false)
+      }, 15000) // 15 seconds duration
+    }, 5000) // Start after 5 seconds
+
+    return () => {
+      clearTimeout(scareStart)
+      if (scareTimeoutRef.current) {
+        clearTimeout(scareTimeoutRef.current)
+      }
+    }
+  }, [])
+
+  // Modify the display values based on scare state
+  const displayCirroPercentage = showScare ? 28 : cirroPercentage
+  const displayBiixiPercentage = showScare ? 70 : biixiPercentage
+  const displayCirroVotes = showScare 
+    ? Math.round(processedVotes * (28 / 100))
+    : cirroVotes
+  const displayBiixiVotes = showScare
+    ? Math.round(processedVotes * (70 / 100))
+    : biixiVotes
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100 relative">
@@ -191,9 +225,9 @@ export default function LandingPage() {
                   />
                 </div>
                 <p className="text-xl sm:text-2xl font-bold text-[#fb9304]">
-                  CIRRO {cirroPercentage.toFixed(1)}%
+                  CIRRO {displayCirroPercentage.toFixed(1)}%
                   <span className="block text-base sm:text-lg">
-                    ({cirroVotes.toLocaleString()} votes)
+                    ({displayCirroVotes.toLocaleString()} votes)
                   </span>
                 </p>
               </div>
@@ -208,9 +242,9 @@ export default function LandingPage() {
                   />
                 </div>
                 <p className="text-xl sm:text-2xl font-bold text-[#0c6b04]">
-                  BIIXI {biixiPercentage.toFixed(1)}%
+                  BIIXI {displayBiixiPercentage.toFixed(1)}%
                   <span className="block text-base sm:text-lg">
-                    ({biixiVotes.toLocaleString()} votes)
+                    ({displayBiixiVotes.toLocaleString()} votes)
                   </span>
                 </p>
               </div>
