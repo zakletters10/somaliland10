@@ -71,22 +71,6 @@ export default function LandingPage() {
     { name: 'HILAAC', value: 7, color: '#gray' }
   ];
 
-  const regions = [
-    { 
-      name: 'Maroodi Jeex',
-      waddani: 37,
-      kulmiye: 17,
-      ucid: 12
-    },
-    { 
-      name: 'Togdheer',
-      waddani: 35,
-      kulmiye: 18,
-      ucid: 11
-    },
-    // ... add other regions
-  ];
-
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
       <header className="bg-white shadow-sm">
