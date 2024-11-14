@@ -7,38 +7,60 @@ import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from 'recharts
 export default function LandingPage() {
   const totalVotes = 920000
 
-  // Base percentages
+  // Initialize with static values
   const [cirroPercentage, setCirroPercentage] = useState(62.8)
   const [biixiPercentage, setBiixiPercentage] = useState(35.2)
   const [thirdPercentage] = useState(2.0)
-  const [processedPercentage] = useState(94)
+  const [processedPercentage, setProcessedPercentage] = useState(70)
 
-  // Add subtle fluctuation
+  // Update values after component mounts
   useEffect(() => {
+    // Calculate initial values
+    const now = Date.now()
+    const startTime = new Date('2024-11-14T21:21:00Z').getTime()
+    const endTime = startTime + (12 * 60 * 60 * 1000)
+    const progress = Math.min(Math.max((now - startTime) / (endTime - startTime), 0), 1)
+    
+    // Set initial values
+    const initialProcessed = Math.min(70 + (30 * progress), 100)
+    const initialCirro = Math.min(62.8 + (progress * 0.1), 62.9)
+    const initialBiixi = 98 - initialCirro
+
+    setProcessedPercentage(initialProcessed)
+    setCirroPercentage(initialCirro)
+    setBiixiPercentage(initialBiixi)
+
+    // Set up interval for updates
     const interval = setInterval(() => {
-      // Random small fluctuation between -0.1 and +0.1
-      const fluctuation = (Math.random() * 0.2 - 0.1)
+      const now = Date.now()
+      const progress = Math.min(Math.max((now - startTime) / (endTime - startTime), 0), 1)
       
-      // Update Cirro's percentage within bounds
-      setCirroPercentage(currentCirro => {
-        const newValue = currentCirro + fluctuation
-        return Math.min(Math.max(newValue, 62.7), 62.9)
+      // Update processed percentage
+      const newProcessed = 70 + (30 * progress)
+      setProcessedPercentage(Math.min(newProcessed, 100))
+
+      // Small positive fluctuation
+      const fluctuation = Math.random() * 0.1
+      
+      // Update percentages
+      setCirroPercentage(current => {
+        const newValue = Math.min(current + fluctuation, 62.9)
+        return newValue
       })
 
-      // Update Biixi's percentage in opposite direction to maintain total
-      setBiixiPercentage(currentBiixi => {
-        const newValue = currentBiixi - fluctuation
-        return Math.min(Math.max(newValue, 35.1), 35.3)
+      setBiixiPercentage(current => {
+        return 98 - cirroPercentage
       })
-    }, 5000) // Update every 5 seconds
+    }, 5000)
 
     return () => clearInterval(interval)
   }, [])
-  
-  // Calculate exact vote counts based on processed percentage
+
+  // Calculate vote counts
   const processedVotes = Math.round(totalVotes * (processedPercentage / 100))
   const cirroVotes = Math.round(processedVotes * (cirroPercentage / 100))
   const biixiVotes = Math.round(processedVotes * (biixiPercentage / 100))
+  const thirdVotes = Math.round(processedVotes * (thirdPercentage / 100))
 
   // Calculate others percentage
   const othersPercentage = 100 - cirroPercentage - biixiPercentage - thirdPercentage
@@ -56,13 +78,25 @@ export default function LandingPage() {
 
   // Add visitor counter animation
   useEffect(() => {
+    const startCount = 96000
+    const targetCount = 2000000
+    
+    // Calculate initial count
+    const now = Date.now()
+    const startTime = new Date('2024-11-14T23:05:00Z').getTime()
+    const endTime = startTime + (24 * 60 * 60 * 1000)
+    const progress = Math.min(Math.max((now - startTime) / (endTime - startTime), 0), 1)
+    const initialCount = Math.max(startCount + Math.floor((targetCount - startCount) * progress), startCount)
+    
+    setVisitorCount(initialCount)
+
     const interval = setInterval(() => {
-      setVisitorCount(current => {
-        // Random change between -100 and +300 (biased towards increase)
-        const change = Math.floor(Math.random() * 400) - 100
-        return current + change
-      })
-    }, 3000) // Update every 3 seconds
+      const now = Date.now()
+      const progress = Math.min(Math.max((now - startTime) / (endTime - startTime), 0), 1)
+      const baseCount = startCount + Math.floor((targetCount - startCount) * progress)
+      const fluctuation = Math.floor(Math.random() * 400) - 100
+      setVisitorCount(Math.max(baseCount + fluctuation, baseCount))
+    }, 3000)
 
     return () => clearInterval(interval)
   }, [])
@@ -327,8 +361,7 @@ export default function LandingPage() {
       <div className="fixed bottom-4 right-4 bg-black/80 text-white px-6 py-3 rounded-full shadow-lg flex items-center space-x-3 animate-pulse z-50">
         <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse" />
         <span className="text-base sm:text-lg font-bold">
-          {visitorCount.toLocaleString()} 
-          <span className="font-medium ml-1">live visitors</span>
+          {visitorCount.toLocaleString()} live visitors
         </span>
       </div>
     </div>
