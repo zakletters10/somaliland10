@@ -166,7 +166,7 @@ export default function LandingPage() {
                     BREAKING
                   </span>
                   <p className="text-[12px] sm:text-base font-bold text-white pr-2 leading-tight tracking-wide">
-                    Somaliland&apos;s President Biihi and Opposition Leader Irro in Crucial Meeting Right Now as Vote Counting Nears Completion; Historic Talks Could Signal Peaceful Political Transition
+                    Somaliland&apos;s President Biihi and Opposition Leader Mr. Irro in Crucial Meeting Right Now as Vote Counting Nears Completion; Historic Talks Could Signal Peaceful Political Transition
                   </p>
                 </div>
               </div>
