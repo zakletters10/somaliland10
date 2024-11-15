@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from 'react'
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from 'recharts';
 
 export default function LandingPage() {
-  const totalVotes = 920000
+  const totalVotes = 597845
 
   // Initialize with higher starting percentage (90% instead of 70%)
   const [cirroPercentage, setCirroPercentage] = useState(62.8)
