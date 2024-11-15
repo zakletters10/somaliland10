@@ -5,15 +5,15 @@ import { useState, useEffect, useRef } from 'react'
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from 'recharts';
 
 export default function LandingPage() {
-  const totalVotes = 625456
+  const totalVotes = 698500
 
-  // Initialize with higher starting percentage (97% instead of 90%)
+  // Initialize with current percentages and votes
   const [cirroPercentage, setCirroPercentage] = useState(63.1)
   const [biixiPercentage, setBiixiPercentage] = useState(36.16)
   const [thirdPercentage] = useState(0.74)
   const [processedPercentage, setProcessedPercentage] = useState(97)
   
-  // Use refs to track minimum values with new starting percentage
+  // Update refs with current values
   const cirroRef = useRef(63.1)
   const biixiRef = useRef(36.16)
   const processedRef = useRef(97)
@@ -21,68 +21,66 @@ export default function LandingPage() {
   const biixiVotesRef = useRef(Math.round(totalVotes * 0.97 * 0.3616))
 
   useEffect(() => {
-    // Calculate initial values
-    const now = Date.now()
-    const startTime = new Date('2024-11-14T23:45:00Z').getTime()
-    const endTime = startTime + (6 * 60 * 60 * 1000)
-    const progress = Math.min(Math.max((now - startTime) / (endTime - startTime), 0), 1)
+    const startTime = new Date('2024-11-15T20:13:00Z').getTime()
+    const endTime = startTime + (24 * 60 * 60 * 1000)
     
-    // Set initial values with new starting percentage
-    const initialProcessed = Math.min(97 + (3 * progress), 100)
-    const initialCirro = Math.min(63.1 + (progress * 0.1), 63.2)
-    const initialBiixi = Math.min(36.16 + (progress * 0.05), 36.26)
-
-    // Update refs and state with initial values
-    processedRef.current = Math.max(processedRef.current, initialProcessed)
-    cirroRef.current = Math.max(cirroRef.current, initialCirro)
-    biixiRef.current = Math.max(biixiRef.current, initialBiixi)
-    
-    setProcessedPercentage(processedRef.current)
-    setCirroPercentage(cirroRef.current)
-    setBiixiPercentage(biixiRef.current)
-
-    // Set up interval for updates
-    const interval = setInterval(() => {
+    const updateValues = () => {
       const now = Date.now()
       const progress = Math.min(Math.max((now - startTime) / (endTime - startTime), 0), 1)
       
-      // Update processed percentage (90% to 100%)
-      const newProcessed = Math.max(
-        processedRef.current,
-        Math.min(97 + (3 * progress), 100)
+      // Process percentage increases smoothly
+      const baseProcessed = 97 + (3 * progress)
+      const newProcessed = Math.min(
+        Math.max(processedRef.current, baseProcessed + (Math.random() * 0.01)),
+        100
       )
-      processedRef.current = newProcessed
-      setProcessedPercentage(newProcessed)
-
-      // Small positive fluctuations
-      const cirroPlusValue = Math.random() * 0.05
-      const biixiPlusValue = Math.random() * 0.02
       
-      // Update percentages (only increase)
+      // Small increments for percentages
+      const baseCirro = 63.1 + (0.7 * progress)
+      const baseBiixi = 36.16 + (0.04 * progress)
+      
       const newCirroValue = Math.max(
         cirroRef.current,
-        Math.min(63.1 + (progress * 0.1) + cirroPlusValue, 63.2)
+        baseCirro + (Math.random() * 0.005)
       )
       const newBiixiValue = Math.max(
         biixiRef.current,
-        Math.min(36.16 + (progress * 0.05) + biixiPlusValue, 36.26)
+        baseBiixi + (Math.random() * 0.002)
       )
 
       // Update refs and state
+      processedRef.current = newProcessed
       cirroRef.current = newCirroValue
       biixiRef.current = newBiixiValue
       
+      setProcessedPercentage(newProcessed)
       setCirroPercentage(newCirroValue)
       setBiixiPercentage(newBiixiValue)
 
-      // Update vote counts
-      const newProcessedVotes = Math.round(totalVotes * (newProcessed / 100))
-      const newCirroVotes = Math.round(newProcessedVotes * (newCirroValue / 100))
-      const newBiixiVotes = Math.round(newProcessedVotes * (newBiixiValue / 100))
+      // Calculate base votes
+      const processedVotes = Math.round(totalVotes * (newProcessed / 100))
+      const baseCircoVotes = Math.round(processedVotes * (newCirroValue / 100))
+      const baseBiixiVotes = Math.round(processedVotes * (newBiixiValue / 100))
 
-      cirroVotesRef.current = Math.max(cirroVotesRef.current, newCirroVotes)
-      biixiVotesRef.current = Math.max(biixiVotesRef.current, newBiixiVotes)
-    }, 5000)
+      // Add 1-3 votes per update
+      const randomVotesCirro = Math.floor(Math.random() * 3) + 1  // 1-3 votes
+      const randomVotesBiixi = Math.floor(Math.random() * 2) + 1  // 1-2 votes
+
+      cirroVotesRef.current = Math.max(
+        cirroVotesRef.current,
+        baseCircoVotes + randomVotesCirro
+      )
+      biixiVotesRef.current = Math.max(
+        biixiVotesRef.current,
+        baseBiixiVotes + randomVotesBiixi
+      )
+    }
+
+    // Initial update
+    updateValues()
+
+    // Update more frequently for smoother increments
+    const interval = setInterval(updateValues, 1000) // Every second
 
     return () => clearInterval(interval)
   }, [])
