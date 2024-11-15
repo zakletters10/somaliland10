@@ -157,22 +157,6 @@ export default function LandingPage() {
 
       <main className="flex-grow">
         <div className="max-w-7xl mx-auto py-1 sm:py-12 px-4 sm:px-6 lg:px-8">
-          {/* Breaking News Banner - Enhanced visibility */}
-          <div className="w-full bg-red-600 shadow-lg relative z-50">
-            <div className="max-w-7xl mx-auto">
-              <div className="flex items-start sm:items-center py-2.5 sm:py-3 px-3 sm:px-4"> {/* Increased padding */}
-                <div className="flex flex-col sm:flex-row items-start sm:items-center w-full gap-1.5 sm:gap-3"> {/* Increased gap */}
-                  <span className="inline-flex items-center px-2.5 py-1 rounded text-xs sm:text-sm font-extrabold bg-white text-red-600 animate-pulse mb-1 sm:mb-0 sm:mr-2 shrink-0 tracking-wide"> {/* Enhanced BREAKING label */}
-                    BREAKING
-                  </span>
-                  <p className="text-[12px] sm:text-base font-bold text-white pr-2 leading-tight tracking-wide">
-                    Somaliland&apos;s President Biihi and Opposition Leader Mr. Irro in Crucial Meeting Right Now as Vote Counting Nears Completion.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
           {/* Floating Live Visitors Counter - Adjusted position */}
           <div className="fixed top-[5.5rem] sm:top-12 right-2 sm:right-4 z-50">
             <div className="bg-black/80 text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-full shadow-lg flex items-center space-x-1">
