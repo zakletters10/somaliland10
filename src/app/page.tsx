@@ -166,8 +166,6 @@ export default function LandingPage() {
                     BREAKING
                   </span>
                   <p className="text-[12px] sm:text-base font-bold text-white pr-2 leading-tight tracking-wide">
-                    May Allah have mercy on the former president of Somaliland Ahmed Siilaanyo, who has just passed away as confirmed by Amb Bashe Awil, a member of the family.
-                    <br /><br />
                     Somaliland&apos;s President Biihi and Opposition Leader Mr. Irro in Crucial Meeting Right Now as Vote Counting Nears Completion.
                   </p>
                 </div>
