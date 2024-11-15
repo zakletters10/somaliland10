@@ -157,6 +157,16 @@ export default function LandingPage() {
 
       <main className="flex-grow">
         <div className="max-w-7xl mx-auto py-1 sm:py-12 px-4 sm:px-6 lg:px-8">
+          {/* Even smaller visitor counter */}
+          <div className="flex justify-end mb-2">
+            <div className="bg-black/80 text-white px-3 py-1.5 rounded-full shadow-lg flex items-center space-x-1.5 animate-pulse">
+              <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+              <span className="text-xs sm:text-sm font-bold">
+                {visitorCount.toLocaleString()} live visitors
+              </span>
+            </div>
+          </div>
+
           {/* Move results section up for mobile */}
           <div className="max-w-3xl mx-auto mb-4 sm:mb-8">
             {/* Add election title */}
@@ -386,14 +396,6 @@ export default function LandingPage() {
           </p>
         </div>
       </footer>
-
-      {/* Floating visitor counter with updated styling */}
-      <div className="fixed bottom-4 right-4 bg-black/80 text-white px-6 py-3 rounded-full shadow-lg flex items-center space-x-3 animate-pulse z-50">
-        <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse" />
-        <span className="text-base sm:text-lg font-bold">
-          {visitorCount.toLocaleString()} live visitors
-        </span>
-      </div>
     </div>
   )
 }
