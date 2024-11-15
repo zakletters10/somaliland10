@@ -93,13 +93,51 @@ export default function LandingPage() {
   // Calculate others percentage
   const othersPercentage = Math.max(0, 100 - cirroPercentage - biixiPercentage - thirdPercentage)
 
-  const partyData = [
-    { name: 'WADDANI', value: 37.9, color: '#fb9304' },
-    { name: 'KAAH', value: 22.1, color: '#eb242b' },
-    { name: 'KULMIYE', value: 18.0, color: '#0c6c04' },
-    { name: 'HORSEED', value: 12.0, color: '#87d662' },
-    { name: 'HILAAC', value: 10.0, color: '#gray' }
-  ];
+  // Add state for party data
+  const [partyData, setPartyData] = useState([
+    { name: 'WADDANI', baseValue: 37.9, value: 37.9, color: '#fb9304' },
+    { name: 'KAAH', baseValue: 22.1, value: 22.1, color: '#eb242b' },
+    { name: 'KULMIYE', baseValue: 18.0, value: 18.0, color: '#0c6c04' },
+    { name: 'HORSEED', baseValue: 12.0, value: 12.0, color: '#87d662' },
+    { name: 'HILAAC', baseValue: 10.0, value: 10.0, color: '#gray' }
+  ]);
+
+  useEffect(() => {
+    const startTime = new Date('2024-11-15T20:13:00Z').getTime()
+    const endTime = startTime + (24 * 60 * 60 * 1000)
+    
+    const updatePartyData = () => {
+      const now = Date.now()
+      const progress = Math.min(Math.max((now - startTime) / (endTime - startTime), 0), 1)
+      
+      setPartyData(prevData => prevData.map(party => {
+        // Calculate small random fluctuation (±0.2%)
+        const fluctuation = (Math.random() * 0.4 - 0.2)
+        
+        // Calculate trend based on progress (slight increase/decrease over time)
+        const trend = party.name === 'WADDANI' ? 0.3 * progress :
+                     party.name === 'KAAH' ? 0.2 * progress :
+                     party.name === 'KULMIYE' ? -0.2 * progress :
+                     party.name === 'HORSEED' ? -0.1 * progress :
+                     -0.2 * progress
+
+        // Combine base value, trend, and fluctuation
+        const newValue = party.baseValue + trend + fluctuation
+
+        return {
+          ...party,
+          value: Number(newValue.toFixed(1))
+        }
+      }))
+    }
+
+    // Update party data every 3 seconds
+    const partyInterval = setInterval(updatePartyData, 3000)
+
+    return () => {
+      clearInterval(partyInterval)
+    }
+  }, [])
 
   // Add visitor counter state
   const [visitorCount, setVisitorCount] = useState(96000)
