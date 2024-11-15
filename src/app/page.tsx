@@ -7,29 +7,28 @@ import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from 'recharts
 export default function LandingPage() {
   const totalVotes = 920000
 
-  // Initialize with static values
+  // Initialize with higher starting percentage (90% instead of 70%)
   const [cirroPercentage, setCirroPercentage] = useState(62.8)
   const [biixiPercentage, setBiixiPercentage] = useState(35.2)
   const [thirdPercentage] = useState(2.0)
-  const [processedPercentage, setProcessedPercentage] = useState(70)
+  const [processedPercentage, setProcessedPercentage] = useState(90)
   
-  // Use refs to track minimum values
+  // Use refs to track minimum values with new starting percentage
   const cirroRef = useRef(62.8)
   const biixiRef = useRef(35.2)
-  const processedRef = useRef(70)
-  const cirroVotesRef = useRef(Math.round(totalVotes * 0.7 * 0.628))
-  const biixiVotesRef = useRef(Math.round(totalVotes * 0.7 * 0.352))
+  const processedRef = useRef(90)
+  const cirroVotesRef = useRef(Math.round(totalVotes * 0.9 * 0.628))
+  const biixiVotesRef = useRef(Math.round(totalVotes * 0.9 * 0.352))
 
-  // Update values after component mounts
   useEffect(() => {
     // Calculate initial values
     const now = Date.now()
-    const startTime = new Date('2024-11-14T21:21:00Z').getTime()
-    const endTime = startTime + (12 * 60 * 60 * 1000)
+    const startTime = new Date('2024-11-14T23:45:00Z').getTime()
+    const endTime = startTime + (6 * 60 * 60 * 1000)
     const progress = Math.min(Math.max((now - startTime) / (endTime - startTime), 0), 1)
     
-    // Set initial values
-    const initialProcessed = Math.min(70 + (30 * progress), 100)
+    // Set initial values with new starting percentage
+    const initialProcessed = Math.min(90 + (10 * progress), 100)
     const initialCirro = Math.min(62.8 + (progress * 0.1), 62.9)
     const initialBiixi = Math.min(35.2 + (progress * 0.05), 35.3)
 
@@ -47,10 +46,10 @@ export default function LandingPage() {
       const now = Date.now()
       const progress = Math.min(Math.max((now - startTime) / (endTime - startTime), 0), 1)
       
-      // Update processed percentage (only increase)
+      // Update processed percentage (90% to 100%)
       const newProcessed = Math.max(
         processedRef.current,
-        Math.min(70 + (30 * progress), 100)
+        Math.min(90 + (10 * progress), 100)
       )
       processedRef.current = newProcessed
       setProcessedPercentage(newProcessed)
@@ -132,40 +131,6 @@ export default function LandingPage() {
     return () => clearInterval(interval)
   }, [])
 
-  // Add scare prank state
-  const [showScare, setShowScare] = useState(false)
-  const scareTimeoutRef = useRef<NodeJS.Timeout>()
-
-  // Add scare effect after a delay
-  useEffect(() => {
-    // Start scare after 5 seconds
-    const scareStart = setTimeout(() => {
-      setShowScare(true)
-      
-      // End scare after 15 seconds
-      scareTimeoutRef.current = setTimeout(() => {
-        setShowScare(false)
-      }, 15000) // 15 seconds duration
-    }, 5000) // Start after 5 seconds
-
-    return () => {
-      clearTimeout(scareStart)
-      if (scareTimeoutRef.current) {
-        clearTimeout(scareTimeoutRef.current)
-      }
-    }
-  }, [])
-
-  // Modify the display values based on scare state
-  const displayCirroPercentage = showScare ? 28 : cirroPercentage
-  const displayBiixiPercentage = showScare ? 70 : biixiPercentage
-  const displayCirroVotes = showScare 
-    ? Math.round(processedVotes * (28 / 100))
-    : cirroVotes
-  const displayBiixiVotes = showScare
-    ? Math.round(processedVotes * (70 / 100))
-    : biixiVotes
-
   return (
     <div className="min-h-screen flex flex-col bg-gray-100 relative">
       <header className="bg-white shadow-sm">
@@ -225,9 +190,9 @@ export default function LandingPage() {
                   />
                 </div>
                 <p className="text-xl sm:text-2xl font-bold text-[#fb9304]">
-                  CIRRO {displayCirroPercentage.toFixed(1)}%
+                  CIRRO {cirroPercentage.toFixed(1)}%
                   <span className="block text-base sm:text-lg">
-                    ({displayCirroVotes.toLocaleString()} votes)
+                    ({cirroVotes.toLocaleString()} votes)
                   </span>
                 </p>
               </div>
@@ -242,9 +207,9 @@ export default function LandingPage() {
                   />
                 </div>
                 <p className="text-xl sm:text-2xl font-bold text-[#0c6b04]">
-                  BIIXI {displayBiixiPercentage.toFixed(1)}%
+                  BIIXI {biixiPercentage.toFixed(1)}%
                   <span className="block text-base sm:text-lg">
-                    ({displayBiixiVotes.toLocaleString()} votes)
+                    ({biixiVotes.toLocaleString()} votes)
                   </span>
                 </p>
               </div>
