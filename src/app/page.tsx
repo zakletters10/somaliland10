@@ -380,7 +380,7 @@ export default function LandingPage() {
             </div>
 
             {/* Add more space between sections */}
-            <div className="mt-16"> {/* Increased margin-top for better spacing */}
+            <div className="mt-8 sm:mt-16"> {/* Reduced margin-top for mobile */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto px-4">
                 <div className="relative h-40 w-full max-w-sm mx-auto">
                   <Image
@@ -414,7 +414,7 @@ export default function LandingPage() {
       <footer className="bg-white border-t mt-auto">
         <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
           <p className="text-center text-sm text-gray-500">
-            © 2024 Somaliland Elections. Developed by Zakaria Abdikarim, Helsinki. All rights reserved.
+            © 2024 Somaliland Elections. All rights reserved.
           </p>
         </div>
       </footer>
