@@ -93,13 +93,13 @@ export default function LandingPage() {
   // Calculate others percentage
   const othersPercentage = Math.max(0, 100 - cirroPercentage - biixiPercentage - thirdPercentage)
 
-  // Add state for party data
+  // Update the party data state with larger initial values
   const [partyData, setPartyData] = useState([
-    { name: 'WADDANI', baseValue: 37.9, value: 37.9, color: '#fb9304' },
-    { name: 'KAAH', baseValue: 22.1, value: 22.1, color: '#eb242b' },
-    { name: 'KULMIYE', baseValue: 18.0, value: 18.0, color: '#0c6c04' },
-    { name: 'HORSEED', baseValue: 12.0, value: 12.0, color: '#87d662' },
-    { name: 'HILAAC', baseValue: 10.0, value: 10.0, color: '#gray' }
+    { name: 'WADDANI', baseValue: 37.9, value: 37.9, color: '#fb9304', change: '+' },
+    { name: 'KAAH', baseValue: 22.1, value: 22.1, color: '#eb242b', change: '+' },
+    { name: 'KULMIYE', baseValue: 18.0, value: 18.0, color: '#0c6c04', change: '-' },
+    { name: 'HORSEED', baseValue: 12.0, value: 12.0, color: '#87d662', change: '-' },
+    { name: 'HILAAC', baseValue: 10.0, value: 10.0, color: '#gray', change: '-' }
   ]);
 
   useEffect(() => {
@@ -111,15 +111,15 @@ export default function LandingPage() {
       const progress = Math.min(Math.max((now - startTime) / (endTime - startTime), 0), 1)
       
       setPartyData(prevData => prevData.map(party => {
-        // Calculate small random fluctuation (±0.2%)
-        const fluctuation = (Math.random() * 0.4 - 0.2)
+        // Larger random fluctuation (±0.5%)
+        const fluctuation = (Math.random() * 1.0 - 0.5)
         
-        // Calculate trend based on progress (slight increase/decrease over time)
-        const trend = party.name === 'WADDANI' ? 0.3 * progress :
-                     party.name === 'KAAH' ? 0.2 * progress :
-                     party.name === 'KULMIYE' ? -0.2 * progress :
-                     party.name === 'HORSEED' ? -0.1 * progress :
-                     -0.2 * progress
+        // Larger trends based on progress
+        const trend = party.name === 'WADDANI' ? 1.2 * progress :
+                     party.name === 'KAAH' ? 0.8 * progress :
+                     party.name === 'KULMIYE' ? -0.6 * progress :
+                     party.name === 'HORSEED' ? -0.7 * progress :
+                     -0.7 * progress
 
         // Combine base value, trend, and fluctuation
         const newValue = party.baseValue + trend + fluctuation
@@ -131,12 +131,10 @@ export default function LandingPage() {
       }))
     }
 
-    // Update party data every 3 seconds
-    const partyInterval = setInterval(updatePartyData, 3000)
+    // Update more frequently
+    const partyInterval = setInterval(updatePartyData, 2000)
 
-    return () => {
-      clearInterval(partyInterval)
-    }
+    return () => clearInterval(partyInterval)
   }, [])
 
   // Add visitor counter state
@@ -236,6 +234,14 @@ export default function LandingPage() {
                   </div>
                   <p className="text-xl sm:text-2xl font-bold text-[#fb9304]">
                     CIRRO {cirroPercentage.toFixed(1)}%
+                    <svg 
+                      className="inline-block w-5 h-5 sm:w-6 sm:h-6 text-blue-500 ml-1 mb-1"
+                      fill="currentColor" 
+                      viewBox="0 0 24 24"
+                      style={{ verticalAlign: 'middle' }}
+                    >
+                      <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1.177 15l-4.243-4.243 1.415-1.414 2.828 2.828 5.657-5.657 1.415 1.414-7.072 7.072z" />
+                    </svg>
                     <span className="block text-base sm:text-lg">
                       ({cirroVotes.toLocaleString()} votes)
                     </span>
@@ -307,15 +313,22 @@ export default function LandingPage() {
                   <span className="text-xs text-red-600 font-medium">Live update</span>
                 </div>
               </h2>
-              <div className="h-64 w-full">
+              <div className="h-96 sm:h-80 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart 
                     data={partyData} 
                     layout="vertical"
-                    margin={{ top: 5, right: 50, left: 80, bottom: 5 }}
+                    margin={{ 
+                      top: 5, 
+                      right: 150,
+                      left: 80, 
+                      bottom: 5
+                    }}
+                    barSize={30}
                   >
                     <XAxis 
                       type="number" 
+                      domain={[0, 45]}
                       hide 
                     />
                     <YAxis 
@@ -326,32 +339,60 @@ export default function LandingPage() {
                       width={75}
                       style={{
                         fontSize: '14px',
-                        fontWeight: 500
+                        fontWeight: 600
                       }}
                     />
                     <Bar 
                       dataKey="value" 
-                      radius={[0, 4, 4, 0]}
-                      label={{ 
-                        position: 'right',
-                        formatter: (value: number) => `${value}% *`,
-                        fill: '#000',
-                        fontSize: 14,
-                        fontWeight: 'bold',
-                        dx: 5
+                      radius={[4, 4, 4, 4]}
+                      label={(props) => {
+                        const { x, y, value, width } = props;
+                        const party = partyData.find(p => p.value === value);
+                        const baseValue = party?.baseValue ?? value;
+                        const trend = value > baseValue ? "▲" : "▼";
+                        const trendColor = value > baseValue ? "#22c55e" : "#ef4444";
+                        
+                        return (
+                          <g>
+                            <text 
+                              x={x + width + 10}
+                              y={y + 15}
+                              fill="#000000" 
+                              fontSize={14}
+                              fontWeight="bold"
+                              textAnchor="start"
+                              style={{ userSelect: 'none' }}
+                            >
+                              {value.toFixed(1)}%
+                            </text>
+                            <text 
+                              x={x + width + 55}
+                              y={y + 15}
+                              fill={trendColor}
+                              fontSize={14}
+                              fontWeight="bold"
+                              textAnchor="start"
+                              style={{ userSelect: 'none' }}
+                            >
+                              {trend}
+                            </text>
+                          </g>
+                        );
                       }}
+                      animationDuration={500}
                     >
                       {partyData.map((entry, index) => (
                         <Cell 
                           key={`cell-${index}`} 
                           fill={entry.color}
+                          className="transition-all duration-500"
                         />
                       ))}
                     </Bar>
                   </BarChart>
                 </ResponsiveContainer>
               </div>
-              <p className="text-sm text-gray-500 text-center mt-2">
+              <p className="text-sm text-gray-500 text-center mt-4">
                 * Preliminary results - Vote counting in progress
               </p>
             </div>
@@ -427,6 +468,13 @@ export default function LandingPage() {
           </div>
         </div>
       </main>
+
+      {/* Email */}
+      <div className="text-center py-4">
+        <p className="text-gray-600">
+          Email: <a href="mailto:info@somaliland.so" className="hover:text-gray-900">info@somaliland.so</a>
+        </p>
+      </div>
 
       {/* Footer */}
       <footer className="bg-white border-t mt-auto">
