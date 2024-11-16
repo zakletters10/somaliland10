@@ -664,6 +664,33 @@ export default function LandingPage() {
 
       {/* Add a spacer to prevent content from being hidden behind the fixed button */}
       <div className="h-16" />
+
+      {/* Live Visitors Counter */}
+      <div className="fixed top-[4rem] sm:top-20 right-2 sm:right-4 z-50">
+        <div className="bg-black/80 text-white px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-full shadow-lg flex items-center gap-1.5 sm:gap-2 backdrop-blur-sm hover:bg-black/90 transition-all">
+          <div className="relative">
+            <div className="w-1.5 sm:w-2 h-1.5 sm:h-2 bg-green-500 rounded-full animate-pulse" />
+            <div className="absolute inset-0 w-1.5 sm:w-2 h-1.5 sm:h-2 bg-green-500 rounded-full animate-ping opacity-75" />
+          </div>
+          
+          <div className="flex flex-col leading-none sm:leading-tight">
+            <div className="flex items-center gap-1">
+              <span className="text-[10px] sm:text-xs text-green-400 font-medium">LIVE</span>
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                viewBox="0 0 24 24" 
+                fill="currentColor" 
+                className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-green-400"
+              >
+                <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <span className="text-[11px] sm:text-sm font-bold">
+              {visitorCount.toLocaleString()}
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
