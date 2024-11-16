@@ -294,7 +294,7 @@ export default function LandingPage() {
       <main className="flex-grow">
         <div className="max-w-7xl mx-auto py-1 sm:py-6 px-4 sm:px-6 lg:px-8">
           {/* Enhanced Watermark */}
-          <div className="text-center mb-1 sm:mb-2">
+          <div className="text-center mt-16 sm:mt-8 mb-1 sm:mb-2">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full 
                           bg-gradient-to-r from-green-50 to-green-100 
                           border border-green-200 shadow-sm hover:shadow-md 
@@ -318,327 +318,291 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* More Compact Live Visitors Counter */}
-          <div className="fixed top-[4rem] sm:top-20 right-2 sm:right-4 z-50">
-            <div className="bg-black/80 text-white px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-full shadow-lg flex items-center gap-1.5 sm:gap-2 backdrop-blur-sm hover:bg-black/90 transition-all">
-              {/* Pulse Animation */}
-              <div className="relative">
-                <div className="w-1.5 sm:w-2 h-1.5 sm:h-2 bg-green-500 rounded-full animate-pulse" />
-                <div className="absolute inset-0 w-1.5 sm:w-2 h-1.5 sm:h-2 bg-green-500 rounded-full animate-ping opacity-75" />
-              </div>
-              
-              {/* Visitor Count */}
-              <div className="flex flex-col leading-none sm:leading-tight">
-                <div className="flex items-center gap-1">
-                  <span className="text-[10px] sm:text-xs text-green-400 font-medium">LIVE</span>
-                  {/* Person Icon */}
-                  <svg 
-                    xmlns="http://www.w3.org/2000/svg" 
-                    viewBox="0 0 24 24" 
-                    fill="currentColor" 
-                    className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-green-400"
-                  >
-                    <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clipRule="evenodd" />
-                  </svg>
+          {/* Move results section up */}
+          <div className="max-w-3xl mx-auto mb-4 sm:mb-8">
+            {/* Add election title */}
+            <h1 className="text-center text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-4">
+              13.11.2024 PRESIDENTIAL ELECTIONS
+            </h1>
+
+            {/* Add live indicator */}
+            <div className="flex items-center justify-center gap-2 mb-2 sm:mb-4">
+              <div className="w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse" />
+              <span className="text-red-600 font-bold">LIVE</span>
+            </div>
+
+            {/* Updated vote count text */}
+            <p className="text-center text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">
+              Vote Count Progress: 97.0% of total votes processed ({Math.round(totalVotes * 0.97).toLocaleString()} votes)
+            </p>
+
+            <div className="flex justify-center space-x-16 sm:space-x-32 mb-4 sm:mb-6">
+              <div className="text-center">
+                <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-full overflow-hidden border-4 border-[#fb9304] mx-auto mb-1 sm:mb-2">
+                  <Image
+                    src="/images/abdirahman.jpg"
+                    alt="Cirro"
+                    width={96}
+                    height={96}
+                    className="object-cover w-full h-full"
+                  />
                 </div>
-                <span className="text-[11px] sm:text-sm font-bold">
-                  {visitorCount.toLocaleString()}
-                </span>
+                <p className="text-xl sm:text-2xl font-bold text-[#fb9304]">
+                  CIRRO {cirroPercentage.toFixed(1)}%
+                  <svg 
+                    className="inline-block w-5 h-5 sm:w-6 sm:h-6 text-blue-500 ml-1 mb-1"
+                    fill="currentColor" 
+                    viewBox="0 0 24 24"
+                    style={{ verticalAlign: 'middle' }}
+                  >
+                    <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1.177 15l-4.243-4.243 1.415-1.414 2.828 2.828 5.657-5.657 1.415 1.414-7.072 7.072z" />
+                  </svg>
+                  <span className="block text-base sm:text-lg">
+                    ({cirroVotes.toLocaleString()} votes)
+                  </span>
+                </p>
+              </div>
+              <div className="text-center">
+                <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-full overflow-hidden border-4 border-[#0c6b04] mx-auto mb-1 sm:mb-2">
+                  <Image
+                    src="/images/biixi.jpeg"
+                    alt="Biixi"
+                    width={96}
+                    height={96}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
+                <p className="text-xl sm:text-2xl font-bold text-[#0c6b04]">
+                  BIIXI {biixiPercentage.toFixed(1)}%
+                  <span className="block text-base sm:text-lg">
+                    ({biixiVotes.toLocaleString()} votes)
+                  </span>
+                </p>
+              </div>
+            </div>
+            
+            {/* Updated progress bar with faster transitions */}
+            <div className="h-8 bg-gray-200 rounded-full overflow-hidden">
+              <div className="flex h-full">
+                <div 
+                  className="bg-[#fb9304] h-full transform transition-all duration-500 ease-out" 
+                  style={{ width: `${cirroPercentage}%` }}
+                />
+                <div 
+                  className="bg-[#0c6b04] h-full transform transition-all duration-500 ease-out" 
+                  style={{ width: `${biixiPercentage}%` }}
+                />
+                <div 
+                  className="bg-gray-400 h-full transform transition-all duration-500 ease-out" 
+                  style={{ width: `${othersPercentage.toFixed(1)}%` }}
+                />
+              </div>
+            </div>
+            
+            {/* Scale */}
+            <div className="flex justify-between mt-2 text-sm text-gray-600">
+              <span>0</span>
+              <span>20</span>
+              <span>40</span>
+              <span>50</span>
+              <span>60</span>
+              <span>80</span>
+              <span>100%</span>
+            </div>
+            
+            {/* Notes */}
+            <p className="text-gray-500 text-sm mt-4 text-center">
+              Notes: Live election results as of November 13, 2024. Results are updated in real-time.
+            </p>
+          </div>
+
+          {/* Political Party Results Chart - Enhanced mobile UI */}
+          <div className="max-w-3xl mx-auto mb-8">
+            <h2 className="text-lg sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-4 text-center">
+              Political Party Results
+              <span className="block text-xs sm:text-sm text-red-600 font-normal mt-0.5 sm:mt-1">
+                Still counting - Results are preliminary
+              </span>
+              <div className="flex items-center justify-center gap-1 sm:gap-2 mt-0.5 sm:mt-1">
+                <div className="w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-red-600 animate-pulse" />
+                <span className="text-[10px] sm:text-xs text-red-600 font-medium">Live update</span>
+              </div>
+            </h2>
+            <div className="h-[340px] sm:h-80 w-full"> {/* Taller on mobile for better spacing */}
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart 
+                  data={partyData} 
+                  layout="vertical"
+                  margin={{ 
+                    top: 5,
+                    right: width < 640 ? 65 : 150,
+                    left: width < 640 ? 40 : 80,
+                    bottom: 5 
+                  }}
+                  barSize={width < 640 ? 20 : 30}   // Thinner bars on mobile
+                >
+                  <XAxis 
+                    type="number" 
+                    domain={[0, width < 640 ? 100 : 45]} // Extended domain for mobile
+                    hide 
+                  />
+                  <YAxis 
+                    type="category" 
+                    dataKey="name" 
+                    axisLine={false}
+                    tickLine={false}
+                    width={width < 640 ? 35 : 75} // Narrower axis on mobile
+                    style={{
+                      fontSize: width < 640 ? '10px' : '14px',
+                      fontWeight: 600
+                    }}
+                  />
+                  <Bar 
+                    dataKey="value" 
+                    radius={[3, 3, 3, 3]} // Slightly smaller radius on mobile
+                    label={(props) => {
+                      const { x, y, value, width } = props;
+                      const party = partyData.find(p => p.value === value);
+                      const baseValue = party?.baseValue ?? value;
+                      const trend = value > baseValue ? "▲" : "▼";
+                      const trendColor = value > baseValue ? "#22c55e" : "#ef4444";
+                      
+                      return (
+                        <g>
+                          <text 
+                            x={x + width + (width < 640 ? 3 : 10)}
+                            y={y + (width < 640 ? 11 : 15)}
+                            fill="#000000" 
+                            fontSize={width < 640 ? 10 : 14}
+                            fontWeight="bold"
+                            textAnchor="start"
+                            style={{ userSelect: 'none' }}
+                          >
+                            {value.toFixed(1)}%
+                          </text>
+                          <text 
+                            x={x + width + (width < 640 ? 28 : 55)}
+                            y={y + (width < 640 ? 11 : 15)}
+                            fill={trendColor}
+                            fontSize={width < 640 ? 10 : 14}
+                            fontWeight="bold"
+                            textAnchor="start"
+                            style={{ userSelect: 'none' }}
+                          >
+                            {trend}
+                          </text>
+                        </g>
+                      );
+                    }}
+                    animationDuration={500}
+                  >
+                    {partyData.map((entry, index) => (
+                      <Cell 
+                        key={`cell-${index}`} 
+                        fill={entry.color}
+                        className="transition-all duration-500"
+                      />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+            <p className="text-[10px] sm:text-sm text-gray-500 text-center mt-2 sm:mt-4">
+              * Preliminary results - Vote counting in progress
+            </p>
+          </div>
+
+          {/* Regional Results and Latest News - Modified to only show Regional Results */}
+          <div className="max-w-7xl mx-auto mt-8 px-2 sm:px-6 lg:px-8">
+            {/* Regional Results Table - Updated UCID color */}
+            <div className="bg-white shadow rounded-lg overflow-hidden">
+              <h2 className="text-xl font-bold text-gray-900 p-4 border-b">
+                Regional Results
+              </h2>
+              <div className="w-full">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-2 sm:px-4 py-2 text-left text-[11px] sm:text-sm font-semibold text-gray-900">Region</th>
+                      <th className="px-2 sm:px-4 py-2 text-right text-[11px] sm:text-sm font-semibold text-gray-900">Total</th>
+                      <th className="px-2 sm:px-4 py-2 text-right text-[11px] sm:text-sm font-semibold text-orange-600">WADDANI</th>
+                      <th className="px-2 sm:px-4 py-2 text-right text-[11px] sm:text-sm font-semibold text-green-700">KULMIYE</th>
+                      <th className="px-2 sm:px-4 py-2 text-right text-[11px] sm:text-sm font-semibold text-[#0c6c04]">UCID</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200 bg-white">
+                    {[
+                      { name: 'AWDAL', votes: 75509, waddani: 78.8, kulmiye: 20.9, ucid: 0.2 },
+                      { name: 'MAROODIJEEX', votes: 233120, waddani: 48.7, kulmiye: 50.1, ucid: 1.2 },
+                      { name: 'SAAXIL', votes: 36319, waddani: 45.6, kulmiye: 54.0, ucid: 0.3 },
+                      { name: 'TOGDHEER', votes: 103207, waddani: 84.9, kulmiye: 14.8, ucid: 0.3 },
+                      { name: 'SOOL', votes: 14285, waddani: 83.2, kulmiye: 16.2, ucid: 0.6 },
+                      { name: 'SANAAG', votes: 41216, waddani: 89.8, kulmiye: 9.9, ucid: 0.2 }
+                    ].map((region) => (
+                      <tr key={region.name} className="even:bg-gray-50">
+                        <td className="px-2 sm:px-3 py-2 text-[11px] sm:text-sm text-gray-900 font-medium">{region.name}</td>
+                        <td className="px-2 sm:px-3 py-2 text-[11px] sm:text-sm text-right text-gray-900">
+                          {region.votes >= 100000 
+                            ? `${(region.votes / 1000).toFixed(1)}K` 
+                            : region.votes.toLocaleString()}
+                        </td>
+                        <td className="px-2 sm:px-3 py-2 text-[11px] sm:text-sm text-right font-medium text-[#fb9304]">{region.waddani}%</td>
+                        <td className="px-2 sm:px-3 py-2 text-[11px] sm:text-sm text-right font-medium text-[#0c6c04]">{region.kulmiye}%</td>
+                        <td className="px-2 sm:px-3 py-2 text-[11px] sm:text-sm text-right font-medium text-[#0c6c04]">{region.ucid}%</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
 
-          {/* Optional: Add a spacer to prevent content from hiding behind the fixed counter */}
-          <div className="h-12 sm:h-16" />
-
-          {/* Reduced top margin */}
-          <div className="mt-16 sm:mt-8">
-            {/* Move results section up for mobile */}
-            <div className="max-w-3xl mx-auto mb-4 sm:mb-8">
-              {/* Add election title */}
-              <h1 className="text-center text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-4">
-                13.11.2024 PRESIDENTIAL ELECTIONS
-              </h1>
-
-              {/* Add live indicator */}
-              <div className="flex items-center justify-center gap-2 mb-2 sm:mb-4">
-                <div className="w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse" />
-                <span className="text-red-600 font-bold">LIVE</span>
-              </div>
-
-              {/* Updated vote count text */}
-              <p className="text-center text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">
-                Vote Count Progress: 97.0% of total votes processed ({Math.round(totalVotes * 0.97).toLocaleString()} votes)
-              </p>
-
-              <div className="flex justify-center space-x-16 sm:space-x-32 mb-4 sm:mb-6">
-                <div className="text-center">
-                  <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-full overflow-hidden border-4 border-[#fb9304] mx-auto mb-1 sm:mb-2">
-                    <Image
-                      src="/images/abdirahman.jpg"
-                      alt="Cirro"
-                      width={96}
-                      height={96}
-                      className="object-cover w-full h-full"
-                    />
-                  </div>
-                  <p className="text-xl sm:text-2xl font-bold text-[#fb9304]">
-                    CIRRO {cirroPercentage.toFixed(1)}%
-                    <svg 
-                      className="inline-block w-5 h-5 sm:w-6 sm:h-6 text-blue-500 ml-1 mb-1"
-                      fill="currentColor" 
-                      viewBox="0 0 24 24"
-                      style={{ verticalAlign: 'middle' }}
-                    >
-                      <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1.177 15l-4.243-4.243 1.415-1.414 2.828 2.828 5.657-5.657 1.415 1.414-7.072 7.072z" />
-                    </svg>
-                    <span className="block text-base sm:text-lg">
-                      ({cirroVotes.toLocaleString()} votes)
-                    </span>
-                  </p>
-                </div>
-                <div className="text-center">
-                  <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-full overflow-hidden border-4 border-[#0c6b04] mx-auto mb-1 sm:mb-2">
-                    <Image
-                      src="/images/biixi.jpeg"
-                      alt="Biixi"
-                      width={96}
-                      height={96}
-                      className="object-cover w-full h-full"
-                    />
-                  </div>
-                  <p className="text-xl sm:text-2xl font-bold text-[#0c6b04]">
-                    BIIXI {biixiPercentage.toFixed(1)}%
-                    <span className="block text-base sm:text-lg">
-                      ({biixiVotes.toLocaleString()} votes)
-                    </span>
-                  </p>
-                </div>
+          {/* Add more space between sections */}
+          <div className="mt-6 sm:mt-12 lg:mt-16"> {/* Adjusted margins */}
+            {/* Images Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 max-w-4xl mx-auto px-4">
+              {/* Flag Image */}
+              <div className="relative aspect-video sm:aspect-[4/3] w-full max-w-md mx-auto rounded-lg overflow-hidden shadow-lg">
+                <Image
+                  src="/images/flag.png"
+                  alt="Somaliland Flag"
+                  fill
+                  sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 400px"
+                  priority
+                  className="object-cover hover:scale-105 transition-transform duration-300"
+                />
               </div>
               
-              {/* Updated progress bar with faster transitions */}
-              <div className="h-8 bg-gray-200 rounded-full overflow-hidden">
-                <div className="flex h-full">
-                  <div 
-                    className="bg-[#fb9304] h-full transform transition-all duration-500 ease-out" 
-                    style={{ width: `${cirroPercentage}%` }}
-                  />
-                  <div 
-                    className="bg-[#0c6b04] h-full transform transition-all duration-500 ease-out" 
-                    style={{ width: `${biixiPercentage}%` }}
-                  />
-                  <div 
-                    className="bg-gray-400 h-full transform transition-all duration-500 ease-out" 
-                    style={{ width: `${othersPercentage.toFixed(1)}%` }}
-                  />
-                </div>
+              {/* President Image */}
+              <div className="relative aspect-video sm:aspect-[4/3] w-full max-w-md mx-auto rounded-lg overflow-hidden shadow-lg">
+                <Image
+                  src="/images/abdirahman.jpg"
+                  alt="Presidential Candidate"
+                  fill
+                  sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 400px"
+                  priority
+                  className="object-cover hover:scale-105 transition-transform duration-300"
+                />
               </div>
-              
-              {/* Scale */}
-              <div className="flex justify-between mt-2 text-sm text-gray-600">
-                <span>0</span>
-                <span>20</span>
-                <span>40</span>
-                <span>50</span>
-                <span>60</span>
-                <span>80</span>
-                <span>100%</span>
-              </div>
-              
-              {/* Notes */}
-              <p className="text-gray-500 text-sm mt-4 text-center">
-                Notes: Live election results as of November 13, 2024. Results are updated in real-time.
-              </p>
             </div>
 
-            {/* Political Party Results Chart - Enhanced mobile UI */}
-            <div className="max-w-3xl mx-auto mb-8">
-              <h2 className="text-lg sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-4 text-center">
-                Political Party Results
-                <span className="block text-xs sm:text-sm text-red-600 font-normal mt-0.5 sm:mt-1">
-                  Still counting - Results are preliminary
-                </span>
-                <div className="flex items-center justify-center gap-1 sm:gap-2 mt-0.5 sm:mt-1">
-                  <div className="w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-red-600 animate-pulse" />
-                  <span className="text-[10px] sm:text-xs text-red-600 font-medium">Live update</span>
-                </div>
+            {/* Text Content */}
+            <div className="text-center mt-6 sm:mt-8 px-4">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">
+                Abdirahman Mohamed Abdullahi
               </h2>
-              <div className="h-[340px] sm:h-80 w-full"> {/* Taller on mobile for better spacing */}
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart 
-                    data={partyData} 
-                    layout="vertical"
-                    margin={{ 
-                      top: 5,
-                      right: width < 640 ? 65 : 150,
-                      left: width < 640 ? 40 : 80,
-                      bottom: 5 
-                    }}
-                    barSize={width < 640 ? 20 : 30}   // Thinner bars on mobile
-                  >
-                    <XAxis 
-                      type="number" 
-                      domain={[0, width < 640 ? 100 : 45]} // Extended domain for mobile
-                      hide 
-                    />
-                    <YAxis 
-                      type="category" 
-                      dataKey="name" 
-                      axisLine={false}
-                      tickLine={false}
-                      width={width < 640 ? 35 : 75} // Narrower axis on mobile
-                      style={{
-                        fontSize: width < 640 ? '10px' : '14px',
-                        fontWeight: 600
-                      }}
-                    />
-                    <Bar 
-                      dataKey="value" 
-                      radius={[3, 3, 3, 3]} // Slightly smaller radius on mobile
-                      label={(props) => {
-                        const { x, y, value, width } = props;
-                        const party = partyData.find(p => p.value === value);
-                        const baseValue = party?.baseValue ?? value;
-                        const trend = value > baseValue ? "▲" : "▼";
-                        const trendColor = value > baseValue ? "#22c55e" : "#ef4444";
-                        
-                        return (
-                          <g>
-                            <text 
-                              x={x + width + (width < 640 ? 3 : 10)}
-                              y={y + (width < 640 ? 11 : 15)}
-                              fill="#000000" 
-                              fontSize={width < 640 ? 10 : 14}
-                              fontWeight="bold"
-                              textAnchor="start"
-                              style={{ userSelect: 'none' }}
-                            >
-                              {value.toFixed(1)}%
-                            </text>
-                            <text 
-                              x={x + width + (width < 640 ? 28 : 55)}
-                              y={y + (width < 640 ? 11 : 15)}
-                              fill={trendColor}
-                              fontSize={width < 640 ? 10 : 14}
-                              fontWeight="bold"
-                              textAnchor="start"
-                              style={{ userSelect: 'none' }}
-                            >
-                              {trend}
-                            </text>
-                          </g>
-                        );
-                      }}
-                      animationDuration={500}
-                    >
-                      {partyData.map((entry, index) => (
-                        <Cell 
-                          key={`cell-${index}`} 
-                          fill={entry.color}
-                          className="transition-all duration-500"
-                        />
-                      ))}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-              <p className="text-[10px] sm:text-sm text-gray-500 text-center mt-2 sm:mt-4">
-                * Preliminary results - Vote counting in progress
+              <p className="mt-2 sm:mt-3 text-lg sm:text-xl lg:text-2xl font-extrabold text-green-600">
+                President-elect
+                <span className="text-sm sm:text-base font-normal text-gray-500 ml-2">
+                  (pending official confirmation)
+                </span>
               </p>
-            </div>
-
-            {/* Regional Results and Latest News - Modified to only show Regional Results */}
-            <div className="max-w-7xl mx-auto mt-8 px-2 sm:px-6 lg:px-8">
-              {/* Regional Results Table - Updated UCID color */}
-              <div className="bg-white shadow rounded-lg overflow-hidden">
-                <h2 className="text-xl font-bold text-gray-900 p-4 border-b">
-                  Regional Results
-                </h2>
-                <div className="w-full">
-                  <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="px-2 sm:px-4 py-2 text-left text-[11px] sm:text-sm font-semibold text-gray-900">Region</th>
-                        <th className="px-2 sm:px-4 py-2 text-right text-[11px] sm:text-sm font-semibold text-gray-900">Total</th>
-                        <th className="px-2 sm:px-4 py-2 text-right text-[11px] sm:text-sm font-semibold text-orange-600">WADDANI</th>
-                        <th className="px-2 sm:px-4 py-2 text-right text-[11px] sm:text-sm font-semibold text-green-700">KULMIYE</th>
-                        <th className="px-2 sm:px-4 py-2 text-right text-[11px] sm:text-sm font-semibold text-[#0c6c04]">UCID</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200 bg-white">
-                      {[
-                        { name: 'AWDAL', votes: 75509, waddani: 78.8, kulmiye: 20.9, ucid: 0.2 },
-                        { name: 'MAROODIJEEX', votes: 233120, waddani: 48.7, kulmiye: 50.1, ucid: 1.2 },
-                        { name: 'SAAXIL', votes: 36319, waddani: 45.6, kulmiye: 54.0, ucid: 0.3 },
-                        { name: 'TOGDHEER', votes: 103207, waddani: 84.9, kulmiye: 14.8, ucid: 0.3 },
-                        { name: 'SOOL', votes: 14285, waddani: 83.2, kulmiye: 16.2, ucid: 0.6 },
-                        { name: 'SANAAG', votes: 41216, waddani: 89.8, kulmiye: 9.9, ucid: 0.2 }
-                      ].map((region) => (
-                        <tr key={region.name} className="even:bg-gray-50">
-                          <td className="px-2 sm:px-3 py-2 text-[11px] sm:text-sm text-gray-900 font-medium">{region.name}</td>
-                          <td className="px-2 sm:px-3 py-2 text-[11px] sm:text-sm text-right text-gray-900">
-                            {region.votes >= 100000 
-                              ? `${(region.votes / 1000).toFixed(1)}K` 
-                              : region.votes.toLocaleString()}
-                          </td>
-                          <td className="px-2 sm:px-3 py-2 text-[11px] sm:text-sm text-right font-medium text-[#fb9304]">{region.waddani}%</td>
-                          <td className="px-2 sm:px-3 py-2 text-[11px] sm:text-sm text-right font-medium text-[#0c6c04]">{region.kulmiye}%</td>
-                          <td className="px-2 sm:px-3 py-2 text-[11px] sm:text-sm text-right font-medium text-[#0c6c04]">{region.ucid}%</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-
-            {/* Add more space between sections */}
-            <div className="mt-6 sm:mt-12 lg:mt-16"> {/* Adjusted margins */}
-              {/* Images Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 max-w-4xl mx-auto px-4">
-                {/* Flag Image */}
-                <div className="relative aspect-video sm:aspect-[4/3] w-full max-w-md mx-auto rounded-lg overflow-hidden shadow-lg">
-                  <Image
-                    src="/images/flag.png"
-                    alt="Somaliland Flag"
-                    fill
-                    sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 400px"
-                    priority
-                    className="object-cover hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                
-                {/* President Image */}
-                <div className="relative aspect-video sm:aspect-[4/3] w-full max-w-md mx-auto rounded-lg overflow-hidden shadow-lg">
-                  <Image
-                    src="/images/abdirahman.jpg"
-                    alt="Presidential Candidate"
-                    fill
-                    sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 400px"
-                    priority
-                    className="object-cover hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-              </div>
-
-              {/* Text Content */}
-              <div className="text-center mt-6 sm:mt-8 px-4">
-                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">
-                  Abdirahman Mohamed Abdullahi
-                </h2>
-                <p className="mt-2 sm:mt-3 text-lg sm:text-xl lg:text-2xl font-extrabold text-green-600">
-                  President-elect
-                  <span className="text-sm sm:text-base font-normal text-gray-500 ml-2">
-                    (pending official confirmation)
-                  </span>
-                </p>
-                <p className="mt-1 sm:mt-2 text-base sm:text-lg font-bold text-gray-500">
-                  6th President of the Republic of Somaliland
-                </p>
-                <p className="mt-1 text-base sm:text-lg font-bold text-gray-500">
-                  13.11.2024 - Present
-                </p>
-              </div>
+              <p className="mt-1 sm:mt-2 text-base sm:text-lg font-bold text-gray-500">
+                6th President of the Republic of Somaliland
+              </p>
+              <p className="mt-1 text-base sm:text-lg font-bold text-gray-500">
+                13.11.2024 - Present
+              </p>
             </div>
           </div>
         </div>
