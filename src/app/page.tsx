@@ -3,8 +3,11 @@
 import Image from 'next/image'
 import { useState, useEffect, useRef } from 'react'
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from 'recharts';
+import useWindowDimensions from '@/hooks/useWindowDimensions'
 
 export default function LandingPage() {
+  const { width } = useWindowDimensions()
+
   const totalVotes = 698500
 
   // Initialize with current percentages and votes
@@ -93,57 +96,94 @@ export default function LandingPage() {
   // Calculate others percentage
   const othersPercentage = Math.max(0, 100 - cirroPercentage - biixiPercentage - thirdPercentage)
 
-  // Update the party data state with larger initial values
+  // Update the party data state with HORSEED before KULMIYE
   const [partyData, setPartyData] = useState([
     { name: 'WADDANI', baseValue: 37.9, value: 37.9, color: '#fb9304', change: '+' },
     { name: 'KAAH', baseValue: 22.1, value: 22.1, color: '#eb242b', change: '+' },
-    { name: 'KULMIYE', baseValue: 18.0, value: 18.0, color: '#0c6c04', change: '-' },
-    { name: 'HORSEED', baseValue: 12.0, value: 12.0, color: '#87d662', change: '-' },
-    { name: 'HILAAC', baseValue: 10.0, value: 10.0, color: '#gray', change: '-' }
+    { name: 'HORSEED', baseValue: 18.2, value: 18.2, color: '#87d662', change: '-' }, // Slightly higher than KULMIYE
+    { name: 'KULMIYE', baseValue: 17.7, value: 17.7, color: '#0c6c04', change: '-' },
+    { name: 'HILAAC', baseValue: 4.1, value: 4.1, color: 'gray', change: '-' }
   ]);
 
+  // Modify the useEffect that updates party data
   useEffect(() => {
     const startTime = new Date('2024-11-15T20:13:00Z').getTime()
     const endTime = startTime + (24 * 60 * 60 * 1000)
+    let lastFlip = Date.now()
     
     const updatePartyData = () => {
       const now = Date.now()
       const progress = Math.min(Math.max((now - startTime) / (endTime - startTime), 0), 1)
       
-      setPartyData(prevData => prevData.map(party => {
-        // Larger random fluctuation (±0.5%)
-        const fluctuation = (Math.random() * 1.0 - 0.5)
-        
-        // Larger trends based on progress
-        const trend = party.name === 'WADDANI' ? 1.2 * progress :
-                     party.name === 'KAAH' ? 0.8 * progress :
-                     party.name === 'KULMIYE' ? -0.6 * progress :
-                     party.name === 'HORSEED' ? -0.7 * progress :
-                     -0.7 * progress
+      setPartyData(prevData => {
+        const newData = prevData.map(party => {
+          // Special handling for HORSEED and KULMIYE
+          let fluctuation = 0
+          if (party.name === 'KULMIYE' || party.name === 'HORSEED') {
+            // Only allow position changes every 5-10 seconds
+            const timeSinceLastFlip = now - lastFlip
+            const minFlipTime = 5000 // 5 seconds minimum
+            const maxFlipTime = 10000 // 10 seconds maximum
+            const shouldAllowFlip = timeSinceLastFlip > minFlipTime && 
+                                   timeSinceLastFlip < maxFlipTime &&
+                                   Math.random() < 0.2 // 20% chance within the time window
+            
+            if (shouldAllowFlip) {
+              fluctuation = (Math.random() * 0.15 - 0.075) // ±0.075% for position changes
+              lastFlip = now
+            } else {
+              // Very small fluctuation during stable periods
+              fluctuation = (Math.random() * 0.02 - 0.01) // ±0.01%
+            }
+          } else {
+            // Normal fluctuation for other parties
+            fluctuation = (Math.random() * 0.04 - 0.02) // ±0.02%
+          }
+          
+          // Adjusted trends to keep HORSEED slightly ahead
+          const trend = party.name === 'WADDANI' ? 1.2 * progress :
+                       party.name === 'KAAH' ? 0.8 * progress :
+                       party.name === 'HORSEED' ? -0.25 * progress : // Slightly better trend
+                       party.name === 'KULMIYE' ? -0.3 * progress :
+                       -0.7 * progress
 
-        // Combine base value, trend, and fluctuation
-        const newValue = party.baseValue + trend + fluctuation
+          // Combine base value, trend, and fluctuation with smoothing
+          const newValue = party.baseValue + trend + fluctuation
 
-        return {
-          ...party,
-          value: Number(newValue.toFixed(1))
-        }
-      }))
+          return {
+            ...party,
+            value: Number(newValue.toFixed(2))
+          }
+        })
+
+        // Sort with a larger threshold to prevent frequent position changes
+        return newData.sort((a, b) => {
+          const diff = b.value - a.value
+          // Only change positions if difference is more than 0.1%
+          if (Math.abs(diff) < 0.1) {
+            // Keep current order for small differences
+            const aIndex = prevData.findIndex(p => p.name === a.name)
+            const bIndex = prevData.findIndex(p => p.name === b.name)
+            return aIndex - bIndex
+          }
+          return diff
+        })
+      })
     }
 
-    // Update more frequently
-    const partyInterval = setInterval(updatePartyData, 2000)
+    // Update less frequently for smoother transitions
+    const partyInterval = setInterval(updatePartyData, 3000) // Every 3 seconds
 
     return () => clearInterval(partyInterval)
   }, [])
 
   // Add visitor counter state
-  const [visitorCount, setVisitorCount] = useState(96000)
+  const [visitorCount, setVisitorCount] = useState(1500000)
 
   // Add visitor counter animation
   useEffect(() => {
-    const startCount = 96000
-    const targetCount = 2000000
+    const startCount = 1500000  // 1.5M
+    const targetCount = 2145677 // ~2.15M
     
     // Calculate initial count
     const now = Date.now()
@@ -158,8 +198,15 @@ export default function LandingPage() {
       const now = Date.now()
       const progress = Math.min(Math.max((now - startTime) / (endTime - startTime), 0), 1)
       const baseCount = startCount + Math.floor((targetCount - startCount) * progress)
-      const fluctuation = Math.floor(Math.random() * 400) - 100
-      setVisitorCount(Math.max(baseCount + fluctuation, baseCount))
+      
+      // Weighted random fluctuation (70% chance to increase)
+      const randomDirection = Math.random()
+      const fluctuation = Math.floor(Math.random() * 10000) // Up to 10,000 visitors
+      const change = randomDirection < 0.7 ? fluctuation : -fluctuation * 0.5 // Smaller decreases
+      
+      const newCount = baseCount + change
+      // Ensure count stays within bounds
+      setVisitorCount(Math.min(Math.max(newCount, baseCount), targetCount))
     }, 3000)
 
     return () => clearInterval(interval)
@@ -169,40 +216,79 @@ export default function LandingPage() {
     <div className="min-h-screen flex flex-col bg-gray-100 relative">
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto py-2 sm:py-4 px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-row items-center space-x-3 sm:space-x-4">
-            <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-300 rounded-full overflow-hidden">
-              <Image
-                src="/images/emblem.png?height=64&width=64"
-                alt="Somaliland Badge"
-                width={64}
-                height={64}
-                className="object-cover w-full h-full"
-              />
+          <div className="flex flex-row items-center justify-between">
+            {/* Left side with Emblem and Original Title */}
+            <div className="flex items-center space-x-3 sm:space-x-4">
+              {/* Emblem */}
+              <div className="w-12 h-12 sm:w-16 sm:h-16">
+                <Image
+                  src="/images/emblem.png"
+                  alt="Somaliland Emblem"
+                  width={64}
+                  height={64}
+                  className="object-contain w-full h-full"
+                />
+              </div>
+              
+              {/* Original Title and Subtitle */}
+              <div>
+                <h3 className="text-sm sm:text-lg md:text-xl font-bold text-gray-900">
+                  President of the Republic of Somaliland
+                </h3>
+                <span className="block text-xs sm:text-sm md:text-base italic text-gray-500">
+                  Madaxweynaha Soomaaliland
+                </span>
+              </div>
             </div>
-            <h3 className="text-lg sm:text-xl font-bold text-gray-900">
-              President of the Republic of Somaliland 
-              <span className="block sm:inline text-sm sm:text-base italic text-gray-500 mt-0.5 sm:mt-0 sm:ml-2">
-                Madaxweynaha Soomaaliland
-              </span>
-            </h3>
+
+            {/* AI System Text and Government Icon */}
+            <div className="flex items-center space-x-2 sm:space-x-3">
+              <div>
+                <h3 className="text-[10px] xs:text-xs sm:text-sm md:text-lg lg:text-xl font-bold text-gray-900 text-right">
+                  AI-Powered<br className="hidden xs:block sm:hidden" /> Election System
+                </h3>
+              </div>
+              {/* Government Building Image - Increased mobile size */}
+              <div className="w-14 h-14 xs:w-16 xs:h-16 sm:w-16 sm:h-16 md:w-18 md:h-18 relative">
+                <Image
+                  src="/images/gov.jpg"
+                  alt="Government Building Icon"
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 640px) 64px, (max-width: 768px) 64px, 72px"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </header>
 
       <main className="flex-grow">
-        <div className="max-w-7xl mx-auto py-1 sm:py-12 px-4 sm:px-6 lg:px-8">
-          {/* Floating Live Visitors Counter - Adjusted position */}
-          <div className="fixed top-[5.5rem] sm:top-12 right-2 sm:right-4 z-50">
-            <div className="bg-black/80 text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-full shadow-lg flex items-center space-x-1">
-              <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-              <span className="text-[10px] sm:text-sm font-bold">
-                {visitorCount.toLocaleString()} live visitors
-              </span>
+        <div className="max-w-7xl mx-auto py-1 sm:py-6 px-4 sm:px-6 lg:px-8">
+          {/* Floating Live Visitors Counter - Enhanced UI */}
+          <div className="fixed top-[4rem] sm:top-20 right-2 sm:right-4 z-50">
+            <div className="bg-black/80 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-full shadow-lg flex items-center gap-2 sm:gap-3 backdrop-blur-sm hover:bg-black/90 transition-all">
+              {/* Pulse Animation */}
+              <div className="relative">
+                <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 bg-green-500 rounded-full animate-pulse" />
+                <div className="absolute inset-0 w-2 h-2 sm:w-2.5 sm:h-2.5 bg-green-500 rounded-full animate-ping opacity-75" />
+              </div>
+              
+              {/* Visitor Count */}
+              <div className="flex flex-col leading-tight">
+                <span className="text-[10px] sm:text-xs text-green-400 font-medium">LIVE VISITORS</span>
+                <span className="text-xs sm:text-sm font-bold -mt-0.5">
+                  {visitorCount.toLocaleString()}
+                </span>
+              </div>
             </div>
           </div>
 
-          {/* Add margin-top to your main content container */}
-          <div className="mt-24 sm:mt-16"> {/* Increased mobile margin */}
+          {/* Optional: Add a spacer to prevent content from hiding behind the fixed counter */}
+          <div className="h-12 sm:h-16" />
+
+          {/* Reduced top margin */}
+          <div className="mt-16 sm:mt-8">
             {/* Move results section up for mobile */}
             <div className="max-w-3xl mx-auto mb-4 sm:mb-8">
               {/* Add election title */}
@@ -301,34 +387,34 @@ export default function LandingPage() {
               </p>
             </div>
 
-            {/* Political Party Results Chart */}
+            {/* Political Party Results Chart - Enhanced mobile UI */}
             <div className="max-w-3xl mx-auto mb-8">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 text-center">
+              <h2 className="text-lg sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-4 text-center">
                 Political Party Results
-                <span className="block text-sm text-red-600 font-normal mt-1">
+                <span className="block text-xs sm:text-sm text-red-600 font-normal mt-0.5 sm:mt-1">
                   Still counting - Results are preliminary
                 </span>
-                <div className="flex items-center justify-center gap-2 mt-1">
-                  <div className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
-                  <span className="text-xs text-red-600 font-medium">Live update</span>
+                <div className="flex items-center justify-center gap-1 sm:gap-2 mt-0.5 sm:mt-1">
+                  <div className="w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-red-600 animate-pulse" />
+                  <span className="text-[10px] sm:text-xs text-red-600 font-medium">Live update</span>
                 </div>
               </h2>
-              <div className="h-96 sm:h-80 w-full">
+              <div className="h-[340px] sm:h-80 w-full"> {/* Taller on mobile for better spacing */}
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart 
                     data={partyData} 
                     layout="vertical"
                     margin={{ 
-                      top: 5, 
-                      right: 150,
-                      left: 80, 
-                      bottom: 5
+                      top: 5,
+                      right: width < 640 ? 65 : 150,
+                      left: width < 640 ? 40 : 80,
+                      bottom: 5 
                     }}
-                    barSize={30}
+                    barSize={width < 640 ? 20 : 30}   // Thinner bars on mobile
                   >
                     <XAxis 
                       type="number" 
-                      domain={[0, 45]}
+                      domain={[0, width < 640 ? 100 : 45]} // Extended domain for mobile
                       hide 
                     />
                     <YAxis 
@@ -336,15 +422,15 @@ export default function LandingPage() {
                       dataKey="name" 
                       axisLine={false}
                       tickLine={false}
-                      width={75}
+                      width={width < 640 ? 35 : 75} // Narrower axis on mobile
                       style={{
-                        fontSize: '14px',
+                        fontSize: width < 640 ? '10px' : '14px',
                         fontWeight: 600
                       }}
                     />
                     <Bar 
                       dataKey="value" 
-                      radius={[4, 4, 4, 4]}
+                      radius={[3, 3, 3, 3]} // Slightly smaller radius on mobile
                       label={(props) => {
                         const { x, y, value, width } = props;
                         const party = partyData.find(p => p.value === value);
@@ -355,10 +441,10 @@ export default function LandingPage() {
                         return (
                           <g>
                             <text 
-                              x={x + width + 10}
-                              y={y + 15}
+                              x={x + width + (width < 640 ? 3 : 10)}
+                              y={y + (width < 640 ? 11 : 15)}
                               fill="#000000" 
-                              fontSize={14}
+                              fontSize={width < 640 ? 10 : 14}
                               fontWeight="bold"
                               textAnchor="start"
                               style={{ userSelect: 'none' }}
@@ -366,10 +452,10 @@ export default function LandingPage() {
                               {value.toFixed(1)}%
                             </text>
                             <text 
-                              x={x + width + 55}
-                              y={y + 15}
+                              x={x + width + (width < 640 ? 28 : 55)}
+                              y={y + (width < 640 ? 11 : 15)}
                               fill={trendColor}
-                              fontSize={14}
+                              fontSize={width < 640 ? 10 : 14}
                               fontWeight="bold"
                               textAnchor="start"
                               style={{ userSelect: 'none' }}
@@ -392,27 +478,27 @@ export default function LandingPage() {
                   </BarChart>
                 </ResponsiveContainer>
               </div>
-              <p className="text-sm text-gray-500 text-center mt-4">
+              <p className="text-[10px] sm:text-sm text-gray-500 text-center mt-2 sm:mt-4">
                 * Preliminary results - Vote counting in progress
               </p>
             </div>
 
             {/* Regional Results and Latest News - Modified to only show Regional Results */}
-            <div className="max-w-7xl mx-auto mt-8 px-4 sm:px-6 lg:px-8">
-              {/* Regional Results Table */}
+            <div className="max-w-7xl mx-auto mt-8 px-2 sm:px-6 lg:px-8">
+              {/* Regional Results Table - Updated UCID color */}
               <div className="bg-white shadow rounded-lg overflow-hidden">
                 <h2 className="text-xl font-bold text-gray-900 p-4 border-b">
                   Regional Results
                 </h2>
-                <div className="overflow-x-auto">
+                <div className="w-full">
                   <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                       <tr>
-                        <th className="px-4 py-2 text-left text-sm font-semibold text-gray-900">Region</th>
-                        <th className="px-4 py-2 text-right text-sm font-semibold text-gray-900">Total Votes</th>
-                        <th className="px-4 py-2 text-right text-sm font-semibold text-orange-600">WADDANI</th>
-                        <th className="px-4 py-2 text-right text-sm font-semibold text-green-700">KULMIYE</th>
-                        <th className="px-4 py-2 text-right text-sm font-semibold text-blue-600">UCID</th>
+                        <th className="px-2 sm:px-4 py-2 text-left text-[11px] sm:text-sm font-semibold text-gray-900">Region</th>
+                        <th className="px-2 sm:px-4 py-2 text-right text-[11px] sm:text-sm font-semibold text-gray-900">Total</th>
+                        <th className="px-2 sm:px-4 py-2 text-right text-[11px] sm:text-sm font-semibold text-orange-600">WADDANI</th>
+                        <th className="px-2 sm:px-4 py-2 text-right text-[11px] sm:text-sm font-semibold text-green-700">KULMIYE</th>
+                        <th className="px-2 sm:px-4 py-2 text-right text-[11px] sm:text-sm font-semibold text-[#0c6c04]">UCID</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 bg-white">
@@ -425,11 +511,15 @@ export default function LandingPage() {
                         { name: 'SANAAG', votes: 41216, waddani: 89.8, kulmiye: 9.9, ucid: 0.2 }
                       ].map((region) => (
                         <tr key={region.name} className="even:bg-gray-50">
-                          <td className="whitespace-nowrap py-2 px-3 text-sm text-gray-900">{region.name}</td>
-                          <td className="whitespace-nowrap py-2 px-3 text-sm text-right text-gray-900">{region.votes.toLocaleString()}</td>
-                          <td className="whitespace-nowrap py-2 px-3 text-sm text-right font-medium text-[#fb9304]">{region.waddani}%</td>
-                          <td className="whitespace-nowrap py-2 px-3 text-sm text-right font-medium text-[#0c6c04]">{region.kulmiye}%</td>
-                          <td className="whitespace-nowrap py-2 px-3 text-sm text-right font-medium text-gray-600">{region.ucid}%</td>
+                          <td className="px-2 sm:px-3 py-2 text-[11px] sm:text-sm text-gray-900 font-medium">{region.name}</td>
+                          <td className="px-2 sm:px-3 py-2 text-[11px] sm:text-sm text-right text-gray-900">
+                            {region.votes >= 100000 
+                              ? `${(region.votes / 1000).toFixed(1)}K` 
+                              : region.votes.toLocaleString()}
+                          </td>
+                          <td className="px-2 sm:px-3 py-2 text-[11px] sm:text-sm text-right font-medium text-[#fb9304]">{region.waddani}%</td>
+                          <td className="px-2 sm:px-3 py-2 text-[11px] sm:text-sm text-right font-medium text-[#0c6c04]">{region.kulmiye}%</td>
+                          <td className="px-2 sm:px-3 py-2 text-[11px] sm:text-sm text-right font-medium text-[#0c6c04]">{region.ucid}%</td>
                         </tr>
                       ))}
                     </tbody>
@@ -439,30 +529,51 @@ export default function LandingPage() {
             </div>
 
             {/* Add more space between sections */}
-            <div className="mt-8 sm:mt-16"> {/* Reduced margin-top for mobile */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto px-4">
-                <div className="relative h-40 w-full max-w-sm mx-auto">
+            <div className="mt-6 sm:mt-12 lg:mt-16"> {/* Adjusted margins */}
+              {/* Images Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 max-w-4xl mx-auto px-4">
+                {/* Flag Image */}
+                <div className="relative aspect-video sm:aspect-[4/3] w-full max-w-md mx-auto rounded-lg overflow-hidden shadow-lg">
                   <Image
                     src="/images/flag.png"
                     alt="Somaliland Flag"
                     fill
-                    className="object-cover rounded-lg shadow-md"
+                    sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 400px"
+                    priority
+                    className="object-cover hover:scale-105 transition-transform duration-300"
                   />
                 </div>
-                <div className="relative h-40 w-full max-w-sm mx-auto">
+                
+                {/* President Image */}
+                <div className="relative aspect-video sm:aspect-[4/3] w-full max-w-md mx-auto rounded-lg overflow-hidden shadow-lg">
                   <Image
                     src="/images/abdirahman.jpg"
                     alt="Presidential Candidate"
                     fill
-                    className="object-cover rounded-lg shadow-md"
+                    sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 400px"
+                    priority
+                    className="object-cover hover:scale-105 transition-transform duration-300"
                   />
                 </div>
               </div>
-              <div className="text-center mt-4">
-                <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Abdirahman Mohamed Abdullahi</h2>
-                <p className="mt-1 text-lg sm:text-xl font-extrabold text-green-600">The President of Somaliland</p>
-                <p className="mt-1 text-base font-bold text-gray-600">[Newly Elected]</p>
-                <p className="mt-0.5 text-base font-bold text-gray-500">13.11.2024 - Present</p>
+
+              {/* Text Content */}
+              <div className="text-center mt-6 sm:mt-8 px-4">
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">
+                  Abdirahman Mohamed Abdullahi
+                </h2>
+                <p className="mt-2 sm:mt-3 text-lg sm:text-xl lg:text-2xl font-extrabold text-green-600">
+                  President-elect
+                  <span className="text-sm sm:text-base font-normal text-gray-500 ml-2">
+                    (pending official confirmation)
+                  </span>
+                </p>
+                <p className="mt-1 sm:mt-2 text-base sm:text-lg font-bold text-gray-500">
+                  6th President of the Republic of Somaliland
+                </p>
+                <p className="mt-1 text-base sm:text-lg font-bold text-gray-500">
+                  13.11.2024 - Present
+                </p>
               </div>
             </div>
           </div>
