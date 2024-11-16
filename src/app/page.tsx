@@ -212,10 +212,38 @@ export default function LandingPage() {
     return () => clearInterval(interval)
   }, [])
 
+  // Add share functionality
+  const handleShare = async () => {
+    try {
+      const shareData = {
+        title: 'Somaliland Presidential Elections 2024 - Live Results',
+        text: `🗳️ Live Election Results:\n` +
+              `Cirro: ${cirroPercentage.toFixed(1)}% (${cirroVotes.toLocaleString()} votes)\n` +
+              `Biixi: ${biixiPercentage.toFixed(1)}% (${biixiVotes.toLocaleString()} votes)\n` +
+              `${processedPercentage.toFixed(1)}% of votes processed`,
+        url: window.location.href,
+      };
+
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        // Fallback for desktop browsers
+        await navigator.clipboard.writeText(
+          `${shareData.title}\n\n${shareData.text}\n\n${shareData.url}`
+        );
+        alert('Link copied to clipboard!');
+      }
+    } catch (error) {
+      console.log('Error sharing:', error);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-100 relative">
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto py-2 sm:py-4 px-4 sm:px-6 lg:px-8">
+          {/* Remove the watermark from here */}
+          
           <div className="flex flex-row items-center justify-between">
             {/* Left side with Emblem and Original Title */}
             <div className="flex items-center space-x-3 sm:space-x-4">
@@ -265,19 +293,55 @@ export default function LandingPage() {
 
       <main className="flex-grow">
         <div className="max-w-7xl mx-auto py-1 sm:py-6 px-4 sm:px-6 lg:px-8">
-          {/* Floating Live Visitors Counter - Enhanced UI */}
+          {/* Enhanced Watermark */}
+          <div className="text-center mb-1 sm:mb-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full 
+                          bg-gradient-to-r from-green-50 to-green-100 
+                          border border-green-200 shadow-sm hover:shadow-md 
+                          transition-all duration-300">
+              <span className="text-xs sm:text-sm font-semibold text-green-700">
+                www.somaliland.so
+              </span>
+              <svg 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600"
+                stroke="currentColor" 
+              >
+                <path 
+                  d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" 
+                  strokeWidth="1.5" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
+          </div>
+
+          {/* More Compact Live Visitors Counter */}
           <div className="fixed top-[4rem] sm:top-20 right-2 sm:right-4 z-50">
-            <div className="bg-black/80 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-full shadow-lg flex items-center gap-2 sm:gap-3 backdrop-blur-sm hover:bg-black/90 transition-all">
+            <div className="bg-black/80 text-white px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-full shadow-lg flex items-center gap-1.5 sm:gap-2 backdrop-blur-sm hover:bg-black/90 transition-all">
               {/* Pulse Animation */}
               <div className="relative">
-                <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 bg-green-500 rounded-full animate-pulse" />
-                <div className="absolute inset-0 w-2 h-2 sm:w-2.5 sm:h-2.5 bg-green-500 rounded-full animate-ping opacity-75" />
+                <div className="w-1.5 sm:w-2 h-1.5 sm:h-2 bg-green-500 rounded-full animate-pulse" />
+                <div className="absolute inset-0 w-1.5 sm:w-2 h-1.5 sm:h-2 bg-green-500 rounded-full animate-ping opacity-75" />
               </div>
               
               {/* Visitor Count */}
-              <div className="flex flex-col leading-tight">
-                <span className="text-[10px] sm:text-xs text-green-400 font-medium">LIVE VISITORS</span>
-                <span className="text-xs sm:text-sm font-bold -mt-0.5">
+              <div className="flex flex-col leading-none sm:leading-tight">
+                <div className="flex items-center gap-1">
+                  <span className="text-[10px] sm:text-xs text-green-400 font-medium">LIVE</span>
+                  {/* Person Icon */}
+                  <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    viewBox="0 0 24 24" 
+                    fill="currentColor" 
+                    className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-green-400"
+                  >
+                    <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <span className="text-[11px] sm:text-sm font-bold">
                   {visitorCount.toLocaleString()}
                 </span>
               </div>
@@ -595,6 +659,47 @@ export default function LandingPage() {
           </p>
         </div>
       </footer>
+
+      {/* Enhanced Share Button */}
+      <div className="fixed bottom-6 right-6 z-50">
+        <button
+          onClick={handleShare}
+          className="group bg-black/80 hover:bg-black/90 text-white px-6 py-3 rounded-full shadow-lg 
+                   flex items-center gap-2.5 transition-all hover:scale-105 active:scale-95 
+                   backdrop-blur-sm border border-white/10"
+          aria-label="Share Results"
+        >
+          {/* Share Icon */}
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            className="h-5 w-5 text-blue-400 group-hover:text-blue-300 transition-colors" 
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor"
+          >
+            <path 
+              strokeLinecap="round" 
+              strokeLinejoin="round" 
+              strokeWidth={2} 
+              d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
+            />
+          </svg>
+          
+          {/* Share Text */}
+          <span className="font-medium text-sm text-gray-100 group-hover:text-white transition-colors">
+            Share
+          </span>
+
+          {/* Pulse Animation */}
+          <div className="absolute -top-1 -right-1 w-3 h-3">
+            <div className="absolute inline-flex w-full h-full rounded-full opacity-75 animate-ping bg-blue-400"></div>
+            <div className="relative inline-flex w-3 h-3 rounded-full bg-blue-500"></div>
+          </div>
+        </button>
+      </div>
+
+      {/* Add a spacer to prevent content from being hidden behind the fixed button */}
+      <div className="h-16" />
     </div>
   )
 }
