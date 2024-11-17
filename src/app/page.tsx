@@ -189,30 +189,36 @@ export default function LandingPage() {
     return () => clearInterval(partyInterval)
   }, [])
 
-  // Update visitor counter state and add total visitors state
-  const [visitorCount, setVisitorCount] = useState(12467)  // Current live visitors
-  const [totalVisitors, setTotalVisitors] = useState(1500000)  // Total visitors start
+  // Calculate initial visitor count based on current time
+  const calculateInitialCount = () => {
+    const startTime = new Date('2024-11-14T23:05:00Z').getTime()
+    const now = Date.now()
+    const progress = Math.min((now - startTime) / (3 * 24 * 60 * 60 * 1000), 1)
+    
+    // Base progression from 12,467 to 18,500
+    const baseCount = 12467 + Math.floor((18500 - 12467) * progress)
+    
+    // Add time-based variations
+    const minuteOfDay = Math.floor((now % (24 * 60 * 60 * 1000)) / (60 * 1000))
+    const surgeMagnitude = Math.sin(minuteOfDay / 60 * Math.PI) * 1000
+    
+    return Math.floor(baseCount + surgeMagnitude)
+  }
+
+  // Initialize state with calculated value
+  const [visitorCount, setVisitorCount] = useState(calculateInitialCount())
+  const [totalVisitors, setTotalVisitors] = useState(1500000)
 
   // Update visitor counter animation
   useEffect(() => {
     const startTime = new Date('2024-11-14T23:05:00Z').getTime()
     const endTime = startTime + (24 * 60 * 60 * 1000 * 3) // 3 days
-    
-    // Target ranges for visitor count
-    const startCount = 12467
-    const targetCount = 18500
-    const minCount = startCount - 200
-    const maxCount = targetCount + 100
-    
-    // Total visitors targets
-    const totalStart = 1500000
-    const totalTarget = 2145677
 
     const calculateVisitorCount = (timestamp: number) => {
-      const progress = Math.min(Math.max((timestamp - startTime) / (endTime - startTime), 0), 1)
+      const progress = Math.min((timestamp - startTime) / (endTime - startTime), 1)
       
-      // Base count based on progress
-      const baseCount = startCount + ((targetCount - startCount) * progress)
+      // Base count based on progress (12,467 to 18,500)
+      const baseCount = 12467 + ((18500 - 12467) * progress)
       
       // Add periodic surges based on timestamp
       const minuteOfDay = Math.floor((timestamp % (24 * 60 * 60 * 1000)) / (60 * 1000))
@@ -232,11 +238,11 @@ export default function LandingPage() {
       setVisitorCount(newCount)
 
       // Total visitor count logic - deterministic based on time
-      const totalProgress = Math.min(Math.max((now - startTime) / (endTime - startTime), 0), 1)
-      const baseTotal = totalStart + ((totalTarget - totalStart) * totalProgress)
-      const totalSurge = Math.sin(now / 1000 / 60 * Math.PI) * 5000 // Periodic surges
+      const totalProgress = Math.min((now - startTime) / (endTime - startTime), 1)
+      const baseTotal = 1500000 + ((2145677 - 1500000) * totalProgress)
+      const totalSurge = Math.sin(now / 1000 / 60 * Math.PI) * 5000
       setTotalVisitors(Math.floor(baseTotal + totalSurge))
-    }, 1000)  // Update every second
+    }, 1000)
 
     return () => clearInterval(interval)
   }, [])
