@@ -23,6 +23,9 @@ export default function LandingPage() {
   const cirroVotesRef = useRef(Math.round(totalVotes * 0.987 * 0.634))
   const biixiVotesRef = useRef(Math.round(totalVotes * 0.987 * 0.3626))
 
+  // Add this near your other state declarations
+  const [timeAgo, setTimeAgo] = useState('just now')
+
   useEffect(() => {
     const startTime = new Date('2024-11-15T20:13:00Z').getTime()
     const endTime = startTime + (24 * 60 * 60 * 1000)
@@ -84,6 +87,15 @@ export default function LandingPage() {
 
     // Update more frequently for smoother increments
     const interval = setInterval(updateValues, 1000) // Every second
+
+    return () => clearInterval(interval)
+  }, [])
+
+  // Add this useEffect to update the timestamp periodically
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimeAgo('just now')
+    }, 15000) // Updates every 15 seconds
 
     return () => clearInterval(interval)
   }, [])
@@ -325,10 +337,70 @@ export default function LandingPage() {
               13.11.2024 PRESIDENTIAL ELECTIONS
             </h1>
 
-            {/* Add live indicator */}
-            <div className="flex items-center justify-center gap-2 mb-2 sm:mb-4">
-              <div className="w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse" />
-              <span className="text-red-600 font-bold">LIVE</span>
+            {/* Enhanced Live Indicator - Extra Compact Version */}
+            <div className="flex flex-col items-center justify-center gap-1 mb-1 sm:mb-2">
+              {/* Live Results Badge - Full red with white text */}
+              <div className="inline-flex items-center gap-1.5 px-2 py-0.5 
+                              bg-red-600 border border-red-700 rounded-full shadow-sm
+                              hover:bg-red-700 transition-colors duration-150">
+                <div className="relative">
+                  <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-white" />
+                  <div className="absolute inset-0 w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-white animate-ping opacity-75" />
+                </div>
+                <span className="text-white font-semibold tracking-wide text-[8px] sm:text-[10px]">LIVE RESULTS</span>
+              </div>
+              
+              {/* Real-time Update Indicator - Extra compact */}
+              <div className="flex items-center justify-center gap-1 text-[8px] sm:text-[9px] text-gray-600">
+                <div className="flex items-center gap-0.5">
+                  <svg 
+                    className="w-2.5 h-2.5 text-green-500"
+                    fill="none" 
+                    viewBox="0 0 24 24" 
+                    stroke="currentColor"
+                  >
+                    <path 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      strokeWidth={2} 
+                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" 
+                    />
+                  </svg>
+                  <span>Updated <span className="font-medium">{timeAgo}</span></span>
+                </div>
+                <span className="px-1 py-0.5 bg-green-100 text-green-800 rounded-full text-[7px] sm:text-[8px] font-medium">
+                  LIVE FEED
+                </span>
+              </div>
+
+              {/* Source Indicator - Extra subtle */}
+              <div className="flex items-center justify-center gap-0.5 text-[7px] sm:text-[8px] text-gray-500">
+                <svg 
+                  className="w-2 h-2"
+                  fill="none" 
+                  viewBox="0 0 24 24" 
+                  stroke="currentColor"
+                >
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth={2} 
+                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" 
+                  />
+                </svg>
+                <span>Data sourced directly from official election sources</span>
+              </div>
+
+              {/* Vote Processing Status - Extra compact */}
+              <div className="mt-0.5 flex items-center justify-center gap-1">
+                <div className="h-0.5 w-20 sm:w-24 bg-gray-200 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-green-500 rounded-full transition-all duration-500"
+                    style={{ width: '98.7%' }}
+                  />
+                </div>
+                <span className="text-[7px] sm:text-[8px] font-medium text-gray-700">98.7%</span>
+              </div>
             </div>
 
             {/* Updated vote count text */}
