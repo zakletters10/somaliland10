@@ -208,52 +208,35 @@ export default function LandingPage() {
     const totalStart = 1500000
     const totalTarget = 2145677
 
-    // Calculate initial progress
-    const now = Date.now()
-    const progress = Math.min(Math.max((now - startTime) / (endTime - startTime), 0), 1)
-    
-    // Set initial total visitors
-    const initialTotal = Math.floor(totalStart + ((totalTarget - totalStart) * progress))
-    setTotalVisitors(initialTotal)
+    const calculateVisitorCount = (timestamp: number) => {
+      const progress = Math.min(Math.max((timestamp - startTime) / (endTime - startTime), 0), 1)
+      
+      // Base count based on progress
+      const baseCount = startCount + ((targetCount - startCount) * progress)
+      
+      // Add periodic surges based on timestamp
+      const minuteOfDay = Math.floor((timestamp % (24 * 60 * 60 * 1000)) / (60 * 1000))
+      const secondOfMinute = Math.floor((timestamp % (60 * 1000)) / 1000)
+      
+      // Create surge patterns
+      const surgeMagnitude = Math.sin(minuteOfDay / 60 * Math.PI) * 1000 // Varies throughout the day
+      const microSurge = Math.sin(secondOfMinute / 60 * Math.PI * 2) * 100 // Small variations
+      
+      // Combine base count with surges
+      return Math.floor(baseCount + surgeMagnitude + microSurge)
+    }
 
     const interval = setInterval(() => {
-      // Live visitor count logic - more noticeable increase
-      setVisitorCount(current => {
-        // Calculate base trend (gradual increase)
-        const targetForNow = startCount + ((targetCount - startCount) * progress)
-        
-        // Larger fluctuation for more noticeable changes
-        const fluctuation = Math.random() > 0.7 ? 
-          Math.floor(Math.random() * 16) - 3 :  // 30% chance of -3 to +12
-          Math.floor(Math.random() * 8) - 2     // 70% chance of -2 to +5
-        
-        // Strong bias towards increase (85% chance)
-        const biasedChange = Math.random() > 0.15 ? 
-          Math.abs(fluctuation) :  // 85% chance of positive change
-          fluctuation              // 15% chance of any change
-        
-        // Always add a small base increase
-        const baseIncrease = current < targetForNow ? 2 : -1
-        
-        // Calculate new count with more noticeable changes
-        const newCount = Math.floor(
-          current + biasedChange + baseIncrease
-        )
-        
-        // Keep within bounds
-        return Math.min(Math.max(newCount, minCount), maxCount)
-      })
+      const now = Date.now()
+      const newCount = calculateVisitorCount(now)
+      setVisitorCount(newCount)
 
-      // Total visitor count logic - smoother progression
-      setTotalVisitors(current => {
-        const baseIncrement = Math.floor(Math.random() * 3) + 2     // 2-4 base increment
-        const burstIncrement = Math.random() > 0.95 ? 
-          Math.floor(Math.random() * 25) + 15 : 0  // Occasional larger bursts (15-40)
-        
-        const newTotal = current + baseIncrement + burstIncrement
-        return Math.min(newTotal, totalTarget)
-      })
-    }, 1000)  // Update every second for smoother animation
+      // Total visitor count logic - deterministic based on time
+      const totalProgress = Math.min(Math.max((now - startTime) / (endTime - startTime), 0), 1)
+      const baseTotal = totalStart + ((totalTarget - totalStart) * totalProgress)
+      const totalSurge = Math.sin(now / 1000 / 60 * Math.PI) * 5000 // Periodic surges
+      setTotalVisitors(Math.floor(baseTotal + totalSurge))
+    }, 1000)  // Update every second
 
     return () => clearInterval(interval)
   }, [])
@@ -306,30 +289,30 @@ export default function LandingPage() {
               
               {/* Original Title and Subtitle */}
               <div>
-                <h3 className="text-sm sm:text-lg md:text-xl font-bold text-gray-900">
+                <h3 className="text-xs sm:text-lg md:text-xl font-bold text-gray-900">
                   President of the Republic of Somaliland
                 </h3>
-                <span className="block text-xs sm:text-sm md:text-base italic text-gray-500">
+                <span className="block text-[10px] sm:text-sm md:text-base italic text-gray-500">
                   Madaxweynaha Soomaaliland
                 </span>
               </div>
             </div>
 
-            {/* AI System Text and Government Icon */}
-            <div className="flex items-center space-x-2 sm:space-x-3">
+            {/* Right side with AI System Text and Government Icon */}
+            <div className="flex items-center space-x-2">
               <div>
-                <h3 className="text-[10px] xs:text-xs sm:text-sm md:text-lg lg:text-xl font-bold text-gray-900 text-right">
+                <h3 className="text-[8px] xs:text-[9px] sm:text-[10px] font-medium text-gray-600 text-right">
                   AI-Powered<br className="hidden xs:block sm:hidden" /> Election System
                 </h3>
               </div>
-              {/* Government Building Image - Increased mobile size */}
-              <div className="w-14 h-14 xs:w-16 xs:h-16 sm:w-16 sm:h-16 md:w-18 md:h-18 relative">
+              {/* Government Building Image */}
+              <div className="w-12 h-12 xs:w-14 xs:h-14 sm:w-16 sm:h-16 relative">
                 <Image
                   src="/images/gov.jpg"
                   alt="Government Building Icon"
                   fill
                   className="object-contain"
-                  sizes="(max-width: 640px) 64px, (max-width: 768px) 64px, 72px"
+                  sizes="(max-width: 640px) 56px, (max-width: 768px) 64px, 72px"
                 />
               </div>
             </div>
