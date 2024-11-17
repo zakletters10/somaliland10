@@ -10,18 +10,18 @@ export default function LandingPage() {
 
   const totalVotes = 698500
 
-  // Initialize with current percentages and votes
-  const [cirroPercentage, setCirroPercentage] = useState(63.1)
-  const [biixiPercentage, setBiixiPercentage] = useState(36.16)
-  const [thirdPercentage] = useState(0.74)
-  const [processedPercentage, setProcessedPercentage] = useState(97)
+  // Initialize with updated percentages and votes
+  const [cirroPercentage, setCirroPercentage] = useState(63.4)
+  const [biixiPercentage, setBiixiPercentage] = useState(36.26)
+  const [thirdPercentage] = useState(0.34)
+  const [processedPercentage, setProcessedPercentage] = useState(98.7)
   
-  // Update refs with current values
-  const cirroRef = useRef(63.1)
-  const biixiRef = useRef(36.16)
-  const processedRef = useRef(97)
-  const cirroVotesRef = useRef(Math.round(totalVotes * 0.97 * 0.631))
-  const biixiVotesRef = useRef(Math.round(totalVotes * 0.97 * 0.3616))
+  // Update refs with new values
+  const cirroRef = useRef(63.4)
+  const biixiRef = useRef(36.26)
+  const processedRef = useRef(98.7)
+  const cirroVotesRef = useRef(Math.round(totalVotes * 0.987 * 0.634))
+  const biixiVotesRef = useRef(Math.round(totalVotes * 0.987 * 0.3626))
 
   useEffect(() => {
     const startTime = new Date('2024-11-15T20:13:00Z').getTime()
@@ -32,15 +32,15 @@ export default function LandingPage() {
       const progress = Math.min(Math.max((now - startTime) / (endTime - startTime), 0), 1)
       
       // Process percentage increases smoothly
-      const baseProcessed = 97 + (3 * progress)
+      const baseProcessed = 98.7 + (3 * progress)
       const newProcessed = Math.min(
         Math.max(processedRef.current, baseProcessed + (Math.random() * 0.01)),
         100
       )
       
       // Small increments for percentages
-      const baseCirro = 63.1 + (0.7 * progress)
-      const baseBiixi = 36.16 + (0.04 * progress)
+      const baseCirro = 63.4 + (0.7 * progress)
+      const baseBiixi = 36.26 + (0.04 * progress)
       
       const newCirroValue = Math.max(
         cirroRef.current,
@@ -333,7 +333,7 @@ export default function LandingPage() {
 
             {/* Updated vote count text */}
             <p className="text-center text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">
-              Vote Count Progress: 97.0% of total votes processed ({Math.round(totalVotes * 0.97).toLocaleString()} votes)
+              Vote Count Progress: 98.7% of total votes processed ({Math.round(totalVotes * 0.987).toLocaleString()} votes)
             </p>
 
             <div className="flex justify-center space-x-16 sm:space-x-32 mb-4 sm:mb-6">
