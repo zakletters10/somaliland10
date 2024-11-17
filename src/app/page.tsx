@@ -217,24 +217,27 @@ export default function LandingPage() {
     setTotalVisitors(initialTotal)
 
     const interval = setInterval(() => {
-      // Live visitor count logic - gradual increase
+      // Live visitor count logic - more noticeable increase
       setVisitorCount(current => {
         // Calculate base trend (gradual increase)
         const targetForNow = startCount + ((targetCount - startCount) * progress)
         
-        // Random fluctuation around the trend
+        // Larger fluctuation for more noticeable changes
         const fluctuation = Math.random() > 0.7 ? 
-          Math.floor(Math.random() * 11) - 3 :  // 30% chance of -3 to +7
-          Math.floor(Math.random() * 5) - 2     // 70% chance of -2 to +2
+          Math.floor(Math.random() * 16) - 3 :  // 30% chance of -3 to +12
+          Math.floor(Math.random() * 8) - 2     // 70% chance of -2 to +5
         
-        // Bias towards increase
-        const biasedChange = Math.random() > 0.3 ? 
-          Math.abs(fluctuation) :  // 70% chance of positive change
-          fluctuation              // 30% chance of any change
+        // Strong bias towards increase (85% chance)
+        const biasedChange = Math.random() > 0.15 ? 
+          Math.abs(fluctuation) :  // 85% chance of positive change
+          fluctuation              // 15% chance of any change
         
-        // Calculate new count
+        // Always add a small base increase
+        const baseIncrease = current < targetForNow ? 2 : -1
+        
+        // Calculate new count with more noticeable changes
         const newCount = Math.floor(
-          current + biasedChange + (current < targetForNow ? 1 : -1)
+          current + biasedChange + baseIncrease
         )
         
         // Keep within bounds
@@ -250,7 +253,7 @@ export default function LandingPage() {
         const newTotal = current + baseIncrement + burstIncrement
         return Math.min(newTotal, totalTarget)
       })
-    }, 1500)  // Update more frequently (every 1.5 seconds)
+    }, 1000)  // Update every second for smoother animation
 
     return () => clearInterval(interval)
   }, [])
