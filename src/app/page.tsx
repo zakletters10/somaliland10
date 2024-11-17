@@ -239,7 +239,7 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100 relative">
+    <div className="min-h-screen flex flex-col bg-gray-100">
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto py-2 sm:py-4 px-4 sm:px-6 lg:px-8">
           {/* Remove the watermark from here */}
@@ -616,7 +616,7 @@ export default function LandingPage() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-white border-t mt-auto">
+      <footer className="bg-white border-t">
         <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
           <p className="text-center text-sm text-gray-500">
             © 2024 Somaliland Elections. All rights reserved.
@@ -624,7 +624,7 @@ export default function LandingPage() {
         </div>
       </footer>
 
-      {/* Enhanced Share Button */}
+      {/* Share Button */}
       <div className="fixed bottom-6 right-6 z-50">
         <button
           onClick={handleShare}
@@ -661,9 +661,6 @@ export default function LandingPage() {
           </div>
         </button>
       </div>
-
-      {/* Add a spacer to prevent content from being hidden behind the fixed button */}
-      <div className="h-16" />
 
       {/* Live Visitors Counter */}
       <div className="fixed top-[4rem] sm:top-20 right-2 sm:right-4 z-50">
