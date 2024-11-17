@@ -611,7 +611,7 @@ export default function LandingPage() {
       {/* Email */}
       <div className="text-center py-4">
         <p className="text-gray-600">
-          Email: <a href="mailto:info@somaliland.so" className="hover:text-gray-900">info@somaliland.so</a>
+          Email: <a href="mailto:info@somaliland.so" className="text-blue-600 hover:text-blue-800 underline">info@somaliland.so</a>
         </p>
       </div>
 
