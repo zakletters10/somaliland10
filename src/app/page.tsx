@@ -339,15 +339,27 @@ export default function LandingPage() {
 
             {/* Enhanced Live Indicator - Extra Compact Version */}
             <div className="flex flex-col items-center justify-center gap-1 mb-1 sm:mb-2">
-              {/* Live Results Badge - Full red with white text */}
-              <div className="inline-flex items-center gap-1.5 px-2 py-0.5 
-                              bg-red-600 border border-red-700 rounded-full shadow-sm
-                              hover:bg-red-700 transition-colors duration-150">
+              {/* Live Results Badge - With inline animation */}
+              <div 
+                className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-red-600 border border-red-700 rounded-full shadow-sm hover:bg-red-700 transition-colors duration-150"
+                style={{
+                  animation: 'subtle-fade 2s ease-in-out infinite'
+                }}
+              >
                 <div className="relative">
                   <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-white" />
                   <div className="absolute inset-0 w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-white animate-ping opacity-75" />
                 </div>
-                <span className="text-white font-semibold tracking-wide text-[8px] sm:text-[10px]">LIVE RESULTS</span>
+                <span className="text-white font-semibold tracking-wide text-[8px] sm:text-[10px]">
+                  LIVE RESULTS
+                </span>
+
+                <style jsx>{`
+                  @keyframes subtle-fade {
+                    0%, 100% { opacity: 1; }
+                    50% { opacity: 0.7; }
+                  }
+                `}</style>
               </div>
               
               {/* Real-time Update Indicator - Extra compact */}
