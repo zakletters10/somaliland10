@@ -189,37 +189,68 @@ export default function LandingPage() {
     return () => clearInterval(partyInterval)
   }, [])
 
-  // Add visitor counter state
-  const [visitorCount, setVisitorCount] = useState(1500000)
+  // Update visitor counter state and add total visitors state
+  const [visitorCount, setVisitorCount] = useState(12467)  // Current live visitors
+  const [totalVisitors, setTotalVisitors] = useState(1500000)  // Total visitors start
 
-  // Add visitor counter animation
+  // Update visitor counter animation
   useEffect(() => {
-    const startCount = 1500000  // 1.5M
-    const targetCount = 2145677 // ~2.15M
-    
-    // Calculate initial count
-    const now = Date.now()
     const startTime = new Date('2024-11-14T23:05:00Z').getTime()
-    const endTime = startTime + (24 * 60 * 60 * 1000)
-    const progress = Math.min(Math.max((now - startTime) / (endTime - startTime), 0), 1)
-    const initialCount = Math.max(startCount + Math.floor((targetCount - startCount) * progress), startCount)
+    const endTime = startTime + (24 * 60 * 60 * 1000 * 3) // 3 days
     
-    setVisitorCount(initialCount)
+    // Target ranges for visitor count
+    const startCount = 12467
+    const targetCount = 18500
+    const minCount = startCount - 200
+    const maxCount = targetCount + 100
+    
+    // Total visitors targets
+    const totalStart = 1500000
+    const totalTarget = 2145677
+
+    // Calculate initial progress
+    const now = Date.now()
+    const progress = Math.min(Math.max((now - startTime) / (endTime - startTime), 0), 1)
+    
+    // Set initial total visitors
+    const initialTotal = Math.floor(totalStart + ((totalTarget - totalStart) * progress))
+    setTotalVisitors(initialTotal)
 
     const interval = setInterval(() => {
-      const now = Date.now()
-      const progress = Math.min(Math.max((now - startTime) / (endTime - startTime), 0), 1)
-      const baseCount = startCount + Math.floor((targetCount - startCount) * progress)
-      
-      // Weighted random fluctuation (70% chance to increase)
-      const randomDirection = Math.random()
-      const fluctuation = Math.floor(Math.random() * 10000) // Up to 10,000 visitors
-      const change = randomDirection < 0.7 ? fluctuation : -fluctuation * 0.5 // Smaller decreases
-      
-      const newCount = baseCount + change
-      // Ensure count stays within bounds
-      setVisitorCount(Math.min(Math.max(newCount, baseCount), targetCount))
-    }, 3000)
+      // Live visitor count logic - gradual increase
+      setVisitorCount(current => {
+        // Calculate base trend (gradual increase)
+        const targetForNow = startCount + ((targetCount - startCount) * progress)
+        
+        // Random fluctuation around the trend
+        const fluctuation = Math.random() > 0.7 ? 
+          Math.floor(Math.random() * 11) - 3 :  // 30% chance of -3 to +7
+          Math.floor(Math.random() * 5) - 2     // 70% chance of -2 to +2
+        
+        // Bias towards increase
+        const biasedChange = Math.random() > 0.3 ? 
+          Math.abs(fluctuation) :  // 70% chance of positive change
+          fluctuation              // 30% chance of any change
+        
+        // Calculate new count
+        const newCount = Math.floor(
+          current + biasedChange + (current < targetForNow ? 1 : -1)
+        )
+        
+        // Keep within bounds
+        return Math.min(Math.max(newCount, minCount), maxCount)
+      })
+
+      // Total visitor count logic - smoother progression
+      setTotalVisitors(current => {
+        const baseIncrement = Math.floor(Math.random() * 3) + 2     // 2-4 base increment
+        const burstIncrement = Math.random() > 0.95 ? 
+          Math.floor(Math.random() * 25) + 15 : 0  // Occasional larger bursts (15-40)
+        
+        const newTotal = current + baseIncrement + burstIncrement
+        return Math.min(newTotal, totalTarget)
+      })
+    }, 1500)  // Update more frequently (every 1.5 seconds)
 
     return () => clearInterval(interval)
   }, [])
@@ -746,29 +777,38 @@ export default function LandingPage() {
         </button>
       </div>
 
-      {/* Live Visitors Counter */}
+      {/* Live Visitors Counter - Extra Compact Version with Better Layout */}
       <div className="fixed top-[4rem] sm:top-20 right-2 sm:right-4 z-50">
-        <div className="bg-black/80 text-white px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-full shadow-lg flex items-center gap-1.5 sm:gap-2 backdrop-blur-sm hover:bg-black/90 transition-all">
-          <div className="relative">
-            <div className="w-1.5 sm:w-2 h-1.5 sm:h-2 bg-green-500 rounded-full animate-pulse" />
-            <div className="absolute inset-0 w-1.5 sm:w-2 h-1.5 sm:h-2 bg-green-500 rounded-full animate-ping opacity-75" />
-          </div>
-          
-          <div className="flex flex-col leading-none sm:leading-tight">
-            <div className="flex items-center gap-1">
-              <span className="text-[10px] sm:text-xs text-green-400 font-medium">LIVE</span>
-              <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                viewBox="0 0 24 24" 
-                fill="currentColor" 
-                className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-green-400"
-              >
-                <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clipRule="evenodd" />
-              </svg>
+        <div className="bg-black/80 text-white px-3 py-1.5 rounded-full shadow-lg backdrop-blur-sm hover:bg-black/90 transition-all">
+          <div className="flex flex-col gap-0.5">
+            {/* Live Counter */}
+            <div className="flex items-center gap-1.5">
+              <div className="relative">
+                <div className="w-1 h-1 bg-green-500 rounded-full animate-pulse" />
+                <div className="absolute inset-0 w-1 h-1 bg-green-500 rounded-full animate-ping opacity-75" />
+              </div>
+              <div className="flex items-center gap-1">
+                <span className="text-[8px] text-green-400 uppercase tracking-wide">Live</span>
+                <svg 
+                  viewBox="0 0 24 24" 
+                  fill="currentColor" 
+                  className="w-2.5 h-2.5 text-green-400"
+                >
+                  <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clipRule="evenodd" />
+                </svg>
+                <span className="text-[10px] font-bold min-w-[40px] text-right">
+                  {visitorCount.toLocaleString()}
+                </span>
+              </div>
             </div>
-            <span className="text-[11px] sm:text-sm font-bold">
-              {visitorCount.toLocaleString()}
-            </span>
+            
+            {/* Total Visitors */}
+            <div className="flex items-center justify-end gap-1 border-t border-white/10 pt-0.5">
+              <span className="text-[7px] text-gray-400 whitespace-nowrap">Total (3d):</span>
+              <span className="text-[8px] font-bold text-blue-400 min-w-[45px] text-right">
+                {totalVisitors.toLocaleString()}
+              </span>
+            </div>
           </div>
         </div>
       </div>
