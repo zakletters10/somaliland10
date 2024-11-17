@@ -1,3 +1,4 @@
+// src/app/sitemap.ts
 import { MetadataRoute } from 'next'
  
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -8,11 +9,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'always',
       priority: 1,
     },
-    {
-      url: 'https://somaliland.so/results',
-      lastModified: new Date(),
-      changeFrequency: 'always',
-      priority: 0.9,
-    }
   ]
 }
