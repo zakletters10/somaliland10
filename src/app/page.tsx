@@ -5,247 +5,224 @@ import { useState, useEffect, useRef } from 'react'
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from 'recharts';
 import useWindowDimensions from '@/hooks/useWindowDimensions'
 
+const INITIAL_VISITOR_COUNT = 80000; // Start with a stable number
+
+interface PartyData {
+  name: string;
+  value: number;
+  baseValue: number;
+  color: string;
+  qualified: boolean;
+}
+
 export default function LandingPage() {
   const { width } = useWindowDimensions()
 
-  const totalVotes = 698500
+  // Fixed vote counts and percentages
+  const totalVotes = 661750;
+  const cirroVotes = 416903;
+  const biixiVotes = 231612;
+  const faisalVotes = 13235;
 
-  // Initialize with updated percentages and votes
-  const [cirroPercentage, setCirroPercentage] = useState(63.4)
-  const [biixiPercentage, setBiixiPercentage] = useState(36.26)
-  const [thirdPercentage] = useState(0.34)
-  const [processedPercentage, setProcessedPercentage] = useState(98.7)
-  
-  // Update refs with new values
-  const cirroRef = useRef(63.4)
-  const biixiRef = useRef(36.26)
-  const processedRef = useRef(98.7)
-  const cirroVotesRef = useRef(Math.round(totalVotes * 0.987 * 0.634))
-  const biixiVotesRef = useRef(Math.round(totalVotes * 0.987 * 0.3626))
+  // Fixed percentages that sum to 100%
+  const cirroPercentage = 63.0;
+  const biixiPercentage = 35.0;
+  const faisalPercentage = 2.0;
 
-  // Add this near your other state declarations
-  const [timeAgo, setTimeAgo] = useState('just now')
+  // Calculate total votes and percentages
+  const totalPartyVotes = 661750;
 
-  useEffect(() => {
-    const startTime = new Date('2024-11-15T20:13:00Z').getTime()
-    const endTime = startTime + (24 * 60 * 60 * 1000)
-    
-    const updateValues = () => {
-      const now = Date.now()
-      const progress = Math.min(Math.max((now - startTime) / (endTime - startTime), 0), 1)
-      
-      // Process percentage increases smoothly
-      const baseProcessed = 98.7 + (3 * progress)
-      const newProcessed = Math.min(
-        Math.max(processedRef.current, baseProcessed + (Math.random() * 0.01)),
-        100
-      )
-      
-      // Small increments for percentages
-      const baseCirro = 63.4 + (0.7 * progress)
-      const baseBiixi = 36.26 + (0.04 * progress)
-      
-      const newCirroValue = Math.max(
-        cirroRef.current,
-        baseCirro + (Math.random() * 0.005)
-      )
-      const newBiixiValue = Math.max(
-        biixiRef.current,
-        baseBiixi + (Math.random() * 0.002)
-      )
-
-      // Update refs and state
-      processedRef.current = newProcessed
-      cirroRef.current = newCirroValue
-      biixiRef.current = newBiixiValue
-      
-      setProcessedPercentage(newProcessed)
-      setCirroPercentage(newCirroValue)
-      setBiixiPercentage(newBiixiValue)
-
-      // Calculate base votes
-      const processedVotes = Math.round(totalVotes * (newProcessed / 100))
-      const baseCircoVotes = Math.round(processedVotes * (newCirroValue / 100))
-      const baseBiixiVotes = Math.round(processedVotes * (newBiixiValue / 100))
-
-      // Add 1-3 votes per update
-      const randomVotesCirro = Math.floor(Math.random() * 3) + 1  // 1-3 votes
-      const randomVotesBiixi = Math.floor(Math.random() * 2) + 1  // 1-2 votes
-
-      cirroVotesRef.current = Math.max(
-        cirroVotesRef.current,
-        baseCircoVotes + randomVotesCirro
-      )
-      biixiVotesRef.current = Math.max(
-        biixiVotesRef.current,
-        baseBiixiVotes + randomVotesBiixi
-      )
+  // Fixed party data with correct calculations and order
+  const [partyData] = useState<PartyData[]>([
+    { 
+      name: 'WADDANI', 
+      value: Math.round((242029 / totalPartyVotes) * 100 * 10) / 10, // 36.6%
+      baseValue: 36.6, 
+      color: '#fb9304', 
+      qualified: true 
+    },
+    { 
+      name: 'KAAH', 
+      value: Math.round((135474 / totalPartyVotes) * 100 * 10) / 10, // 20.5%
+      baseValue: 20.5, 
+      color: '#eb242b', 
+      qualified: true 
+    },
+    { 
+      name: 'KULMIYE', 
+      value: Math.round((108280 / totalPartyVotes) * 100 * 10) / 10, // 16.4%
+      baseValue: 16.4, 
+      color: '#0c6c04', 
+      qualified: true 
+    },
+    { 
+      name: 'HORSEED', 
+      value: Math.round((78774 / totalPartyVotes) * 100 * 10) / 10, // 11.9%
+      baseValue: 11.9, 
+      color: '#87d662', 
+      qualified: false 
+    },
+    { 
+      name: 'HILAAC', 
+      value: Math.round((59254 / totalPartyVotes) * 100 * 10) / 10, // 9.0%
+      baseValue: 9.0, 
+      color: '#666666', 
+      qualified: false 
+    },
+    { 
+      name: 'BARWAAQO', 
+      value: Math.round((17031 / totalPartyVotes) * 100 * 10) / 10, // 2.6%
+      baseValue: 2.6, 
+      color: '#999999', 
+      qualified: false 
+    },
+    { 
+      name: 'UCID', 
+      value: Math.round((10191 / totalPartyVotes) * 100 * 10) / 10, // 1.5%
+      baseValue: 1.5, 
+      color: '#999999', 
+      qualified: false 
+    },
+    { 
+      name: 'TALO-WADAAG', 
+      value: Math.round((6569 / totalPartyVotes) * 100 * 10) / 10, // 1.0%
+      baseValue: 1.0, 
+      color: '#999999', 
+      qualified: false 
+    },
+    { 
+      name: 'RAJO', 
+      value: Math.round((2108 / totalPartyVotes) * 100 * 10) / 10, // 0.3%
+      baseValue: 0.3, 
+      color: '#999999', 
+      qualified: false 
+    },
+    { 
+      name: 'SHACABKA', 
+      value: Math.round((2040 / totalPartyVotes) * 100 * 10) / 10, // 0.3%
+      baseValue: 0.3, 
+      color: '#999999', 
+      qualified: false 
     }
-
-    // Initial update
-    updateValues()
-
-    // Update more frequently for smoother increments
-    const interval = setInterval(updateValues, 1000) // Every second
-
-    return () => clearInterval(interval)
-  }, [])
-
-  // Add this useEffect to update the timestamp periodically
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeAgo('just now')
-    }, 15000) // Updates every 15 seconds
-
-    return () => clearInterval(interval)
-  }, [])
-
-  // Calculate vote counts using refs to ensure they never decrease
-  const processedVotes = Math.round(totalVotes * (processedPercentage / 100))
-  const cirroVotes = Math.max(cirroVotesRef.current, Math.round(processedVotes * (cirroPercentage / 100)))
-  const biixiVotes = Math.max(biixiVotesRef.current, Math.round(processedVotes * (biixiPercentage / 100)))
-
-  // Calculate others percentage
-  const othersPercentage = Math.max(0, 100 - cirroPercentage - biixiPercentage - thirdPercentage)
-
-  // Update the party data state with HORSEED before KULMIYE
-  const [partyData, setPartyData] = useState([
-    { name: 'WADDANI', baseValue: 37.9, value: 37.9, color: '#fb9304', change: '+' },
-    { name: 'KAAH', baseValue: 22.1, value: 22.1, color: '#eb242b', change: '+' },
-    { name: 'HORSEED', baseValue: 18.2, value: 18.2, color: '#87d662', change: '-' }, // Slightly higher than KULMIYE
-    { name: 'KULMIYE', baseValue: 17.7, value: 17.7, color: '#0c6c04', change: '-' },
-    { name: 'HILAAC', baseValue: 4.1, value: 4.1, color: 'gray', change: '-' }
   ]);
 
-  // Modify the useEffect that updates party data
-  useEffect(() => {
-    const startTime = new Date('2024-11-15T20:13:00Z').getTime()
-    const endTime = startTime + (24 * 60 * 60 * 1000)
-    let lastFlip = Date.now()
-    
-    const updatePartyData = () => {
-      const now = Date.now()
-      const progress = Math.min(Math.max((now - startTime) / (endTime - startTime), 0), 1)
-      
-      setPartyData(prevData => {
-        const newData = prevData.map(party => {
-          // Special handling for HORSEED and KULMIYE
-          let fluctuation = 0
-          if (party.name === 'KULMIYE' || party.name === 'HORSEED') {
-            // Only allow position changes every 5-10 seconds
-            const timeSinceLastFlip = now - lastFlip
-            const minFlipTime = 5000 // 5 seconds minimum
-            const maxFlipTime = 10000 // 10 seconds maximum
-            const shouldAllowFlip = timeSinceLastFlip > minFlipTime && 
-                                   timeSinceLastFlip < maxFlipTime &&
-                                   Math.random() < 0.2 // 20% chance within the time window
-            
-            if (shouldAllowFlip) {
-              fluctuation = (Math.random() * 0.15 - 0.075) // ±0.075% for position changes
-              lastFlip = now
-            } else {
-              // Very small fluctuation during stable periods
-              fluctuation = (Math.random() * 0.02 - 0.01) // ±0.01%
-            }
-          } else {
-            // Normal fluctuation for other parties
-            fluctuation = (Math.random() * 0.04 - 0.02) // ±0.02%
-          }
-          
-          // Adjusted trends to keep HORSEED slightly ahead
-          const trend = party.name === 'WADDANI' ? 1.2 * progress :
-                       party.name === 'KAAH' ? 0.8 * progress :
-                       party.name === 'HORSEED' ? -0.25 * progress : // Slightly better trend
-                       party.name === 'KULMIYE' ? -0.3 * progress :
-                       -0.7 * progress
+  // Remove all animation-related state and effects
+  const [timeAgo] = useState('Final Results');
 
-          // Combine base value, trend, and fluctuation with smoothing
-          const newValue = party.baseValue + trend + fluctuation
+  // State declarations
+  const [cirroVotesState, setCirroVotes] = useState(cirroVotes);
+  const [biixiVotesState, setBiixiVotes] = useState(biixiVotes);
+  const [processedPercentage, setProcessedPercentage] = useState(100);
 
-          return {
-            ...party,
-            value: Number(newValue.toFixed(2))
-          }
-        })
+  // Percentage state
+  const [cirroPercentageState, setCirroPercentage] = useState(cirroPercentage);
+  const [biixiPercentageState, setBiixiPercentage] = useState(biixiPercentage);
 
-        // Sort with a larger threshold to prevent frequent position changes
-        return newData.sort((a, b) => {
-          const diff = b.value - a.value
-          // Only change positions if difference is more than 0.1%
-          if (Math.abs(diff) < 0.1) {
-            // Keep current order for small differences
-            const aIndex = prevData.findIndex(p => p.name === a.name)
-            const bIndex = prevData.findIndex(p => p.name === b.name)
-            return aIndex - bIndex
-          }
-          return diff
-        })
-      })
-    }
-
-    // Update less frequently for smoother transitions
-    const partyInterval = setInterval(updatePartyData, 3000) // Every 3 seconds
-
-    return () => clearInterval(partyInterval)
-  }, [])
-
-  // Calculate initial visitor count based on current time
-  const calculateInitialCount = () => {
-    const startTime = new Date('2024-11-14T23:05:00Z').getTime()
-    const now = Date.now()
-    const progress = Math.min((now - startTime) / (3 * 24 * 60 * 60 * 1000), 1)
-    
-    // Base progression from 12,467 to 18,500
-    const baseCount = 12467 + Math.floor((18500 - 12467) * progress)
-    
-    // Add time-based variations
-    const minuteOfDay = Math.floor((now % (24 * 60 * 60 * 1000)) / (60 * 1000))
-    const surgeMagnitude = Math.sin(minuteOfDay / 60 * Math.PI) * 1000
-    
-    return Math.floor(baseCount + surgeMagnitude)
-  }
+  // Update refs
+  const cirroRef = useRef(cirroPercentageState);
+  const biixiRef = useRef(biixiPercentageState);
+  const processedRef = useRef(100);
+  const cirroVotesRef = useRef(cirroVotesState);
+  const biixiVotesRef = useRef(biixiVotesState);
 
   // Initialize state with calculated value
-  const [visitorCount, setVisitorCount] = useState(calculateInitialCount())
-  const [totalVisitors, setTotalVisitors] = useState(1500000)
+  const [visitorCount, setVisitorCount] = useState(INITIAL_VISITOR_COUNT);
+  const [totalVisitors, setTotalVisitors] = useState(1500000);
 
-  // Update visitor counter animation
-  useEffect(() => {
-    const startTime = new Date('2024-11-14T23:05:00Z').getTime()
-    const endTime = startTime + (24 * 60 * 60 * 1000 * 3) // 3 days
+  // Live Visitors Counter Component
+  const LiveVisitorCounter = () => {
+    const [visitorCount, setVisitorCount] = useState(152000);
+    const [totalVisitors, setTotalVisitors] = useState(2145677);
+    const [lastHourChecked, setLastHourChecked] = useState(new Date().getHours());
 
-    const calculateVisitorCount = (timestamp: number) => {
-      const progress = Math.min((timestamp - startTime) / (endTime - startTime), 1)
-      
-      // Base count based on progress (12,467 to 18,500)
-      const baseCount = 12467 + ((18500 - 12467) * progress)
-      
-      // Add periodic surges based on timestamp
-      const minuteOfDay = Math.floor((timestamp % (24 * 60 * 60 * 1000)) / (60 * 1000))
-      const secondOfMinute = Math.floor((timestamp % (60 * 1000)) / 1000)
-      
-      // Create surge patterns
-      const surgeMagnitude = Math.sin(minuteOfDay / 60 * Math.PI) * 1000 // Varies throughout the day
-      const microSurge = Math.sin(secondOfMinute / 60 * Math.PI * 2) * 100 // Small variations
-      
-      // Combine base count with surges
-      return Math.floor(baseCount + surgeMagnitude + microSurge)
-    }
+    useEffect(() => {
+      // Check and add hourly increase
+      const checkHourlyIncrease = () => {
+        const currentHour = new Date().getHours();
+        if (currentHour !== lastHourChecked) {
+          setVisitorCount(prev => prev + 2000); // Add 2000 for the new hour
+          setTotalVisitors(prev => prev + 2000);
+          setLastHourChecked(currentHour);
+        }
+      };
 
-    const interval = setInterval(() => {
-      const now = Date.now()
-      const newCount = calculateVisitorCount(now)
-      setVisitorCount(newCount)
+      // Random fluctuations in visitors
+      const updateVisitors = () => {
+        checkHourlyIncrease();
 
-      // Total visitor count logic - deterministic based on time
-      const totalProgress = Math.min((now - startTime) / (endTime - startTime), 1)
-      const baseTotal = 1500000 + ((2145677 - 1500000) * totalProgress)
-      const totalSurge = Math.sin(now / 1000 / 60 * Math.PI) * 5000
-      setTotalVisitors(Math.floor(baseTotal + totalSurge))
-    }, 1000)
+        // Generate random change (-50 to +100)
+        const changeTypes = [
+          { change: -50, probability: 0.15 },
+          { change: -30, probability: 0.15 },
+          { change: 10, probability: 0.2 },
+          { change: 50, probability: 0.3 },
+          { change: 100, probability: 0.2 }
+        ];
 
-    return () => clearInterval(interval)
-  }, [])
+        const random = Math.random();
+        let cumulativeProbability = 0;
+        let selectedChange = 0;
+
+        for (const type of changeTypes) {
+          cumulativeProbability += type.probability;
+          if (random <= cumulativeProbability) {
+            selectedChange = type.change;
+            break;
+          }
+        }
+
+        setVisitorCount(prev => {
+          const newCount = prev + selectedChange;
+          // Update total visitors only for increases
+          if (selectedChange > 0) {
+            setTotalVisitors(total => total + selectedChange);
+          }
+          return newCount;
+        });
+      };
+
+      // Update every 3 seconds with random changes
+      const interval = setInterval(updateVisitors, 3000);
+      return () => clearInterval(interval);
+    }, [lastHourChecked]);
+
+    return (
+      <div className="fixed top-[4rem] sm:top-20 right-2 sm:right-4 z-50">
+        <div className="bg-black/80 text-white px-3 py-1.5 rounded-full shadow-lg backdrop-blur-sm hover:bg-black/90 transition-all">
+          <div className="flex flex-col gap-0.5">
+            {/* Live Counter */}
+            <div className="flex items-center gap-1.5">
+              <div className="relative">
+                <div className="w-1 h-1 bg-green-500 rounded-full animate-pulse" />
+                <div className="absolute inset-0 w-1 h-1 bg-green-500 rounded-full animate-ping opacity-75" />
+              </div>
+              <div className="flex items-center gap-1">
+                <span className="text-[8px] text-green-400 uppercase tracking-wide">Live</span>
+                <svg 
+                  viewBox="0 0 24 24" 
+                  fill="currentColor" 
+                  className="w-2.5 h-2.5 text-green-400"
+                >
+                  <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clipRule="evenodd" />
+                </svg>
+                <span className="text-[10px] font-bold min-w-[40px] text-right">
+                  {visitorCount.toLocaleString()}
+                </span>
+              </div>
+            </div>
+            
+            {/* Total Visitors */}
+            <div className="flex items-center justify-end gap-1 border-t border-white/10 pt-0.5">
+              <span className="text-[7px] text-gray-400 whitespace-nowrap">Total (3d):</span>
+              <span className="text-[8px] font-bold text-blue-400 min-w-[45px] text-right">
+                {totalVisitors.toLocaleString()}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   // Add share functionality
   const handleShare = async () => {
@@ -253,8 +230,8 @@ export default function LandingPage() {
       const shareData = {
         title: 'Somaliland Presidential Elections 2024 - Live Results',
         text: `🗳️ Live Election Results:\n` +
-              `Cirro: ${cirroPercentage.toFixed(1)}% (${cirroVotes.toLocaleString()} votes)\n` +
-              `Biixi: ${biixiPercentage.toFixed(1)}% (${biixiVotes.toLocaleString()} votes)\n` +
+              `Cirro: ${cirroPercentageState.toFixed(1)}% (${cirroVotes.toLocaleString()} votes)\n` +
+              `Biixi: ${biixiPercentageState.toFixed(1)}% (${biixiVotes.toLocaleString()} votes)\n` +
               `${processedPercentage.toFixed(1)}% of votes processed`,
         url: window.location.href,
       };
@@ -277,9 +254,7 @@ export default function LandingPage() {
     <div className="min-h-screen flex flex-col bg-gray-100">
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto py-2 sm:py-4 px-4 sm:px-6 lg:px-8">
-          {/* Remove the watermark from here */}
-          
-          <div className="flex flex-row items-center justify-between">
+          <div className="flex flex-row items-center">
             {/* Left side with Emblem and Original Title */}
             <div className="flex items-center space-x-3 sm:space-x-4">
               {/* Emblem */}
@@ -303,37 +278,30 @@ export default function LandingPage() {
                 </span>
               </div>
             </div>
-
-            {/* Right side with AI System Text and Government Icon */}
-            <div className="flex items-center space-x-2">
-              <div>
-                <h3 className="text-[8px] xs:text-[9px] sm:text-[10px] font-medium text-gray-600 text-right">
-                  AI-Powered<br className="hidden xs:block sm:hidden" /> Election System
-                </h3>
-              </div>
-              {/* Government Building Image */}
-              <div className="w-12 h-12 xs:w-14 xs:h-14 sm:w-16 sm:h-16 relative">
-                <Image
-                  src="/images/gov.jpg"
-                  alt="Government Building Icon"
-                  fill
-                  className="object-contain"
-                  sizes="(max-width: 640px) 56px, (max-width: 768px) 64px, 72px"
-                />
-              </div>
-            </div>
           </div>
         </div>
       </header>
 
       <main className="flex-grow">
         <div className="max-w-7xl mx-auto py-1 sm:py-6 px-4 sm:px-6 lg:px-8">
-          {/* Enhanced Watermark */}
+          {/* Enhanced Watermark with Live Status */}
           <div className="text-center mt-16 sm:mt-8 mb-1 sm:mb-2">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full 
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full 
                           bg-gradient-to-r from-green-50 to-green-100 
                           border border-green-200 shadow-sm hover:shadow-md 
                           transition-all duration-300">
+              {/* Live Indicator - Increased sizes */}
+              <div className="relative flex items-center gap-1.5">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <div className="absolute inset-0 w-2 h-2 bg-green-500 rounded-full animate-ping opacity-75"></div>
+                <span className="text-[10px] sm:text-xs text-green-600 font-semibold uppercase">Live</span>
+                <span className="text-[10px] sm:text-xs text-green-600">Toos</span>
+              </div>
+              
+              {/* Divider */}
+              <div className="h-3 w-px bg-green-200"></div>
+              
+              {/* Website URL */}
               <span className="text-xs sm:text-sm font-semibold text-green-700">
                 www.somaliland.so
               </span>
@@ -355,63 +323,19 @@ export default function LandingPage() {
 
           {/* Move results section up */}
           <div className="max-w-3xl mx-auto mb-4 sm:mb-8">
-            {/* Add election title */}
-            <h1 className="text-center text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-4">
+            {/* Add election title with Somali translation */}
+            <h1 className="text-center text-xl sm:text-2xl font-bold text-gray-900 mb-2">
               13.11.2024 PRESIDENTIAL ELECTIONS
+              <span className="block text-sm sm:text-base text-gray-600 mt-0.5">
+                DOORASHADA MADAXWEYNAHA 13.11.2024
+              </span>
             </h1>
 
-            {/* Enhanced Live Indicator - Extra Compact Version */}
-            <div className="flex flex-col items-center justify-center gap-1 mb-1 sm:mb-2">
-              {/* Live Results Badge - With inline animation */}
-              <div 
-                className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-red-600 border border-red-700 rounded-full shadow-sm hover:bg-red-700 transition-colors duration-150"
-                style={{
-                  animation: 'subtle-fade 2s ease-in-out infinite'
-                }}
-              >
-                <div className="relative">
-                  <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-white" />
-                  <div className="absolute inset-0 w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-white animate-ping opacity-75" />
-                </div>
-                <span className="text-white font-semibold tracking-wide text-[8px] sm:text-[10px]">
-                  LIVE RESULTS
-                </span>
-
-                <style jsx>{`
-                  @keyframes subtle-fade {
-                    0%, 100% { opacity: 1; }
-                    50% { opacity: 0.7; }
-                  }
-                `}</style>
-              </div>
-              
-              {/* Real-time Update Indicator - Extra compact */}
-              <div className="flex items-center justify-center gap-1 text-[8px] sm:text-[9px] text-gray-600">
-                <div className="flex items-center gap-0.5">
-                  <svg 
-                    className="w-2.5 h-2.5 text-green-500"
-                    fill="none" 
-                    viewBox="0 0 24 24" 
-                    stroke="currentColor"
-                  >
-                    <path 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth={2} 
-                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" 
-                    />
-                  </svg>
-                  <span>Updated <span className="font-medium">{timeAgo}</span></span>
-                </div>
-                <span className="px-1 py-0.5 bg-green-100 text-green-800 rounded-full text-[7px] sm:text-[8px] font-medium">
-                  LIVE FEED
-                </span>
-              </div>
-
-              {/* Source Indicator - Extra subtle */}
-              <div className="flex items-center justify-center gap-0.5 text-[7px] sm:text-[8px] text-gray-500">
+            {/* Announcement Banner - Now directly after the title */}
+            <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-4 shadow-sm">
+              <div className="flex items-center gap-2">
                 <svg 
-                  className="w-2 h-2"
+                  className="w-5 h-5 text-green-600 flex-shrink-0" 
                   fill="none" 
                   viewBox="0 0 24 24" 
                   stroke="currentColor"
@@ -420,31 +344,31 @@ export default function LandingPage() {
                     strokeLinecap="round" 
                     strokeLinejoin="round" 
                     strokeWidth={2} 
-                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" 
+                    d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" 
                   />
                 </svg>
-                <span>Data sourced directly from official election sources</span>
-              </div>
-
-              {/* Vote Processing Status - Extra compact */}
-              <div className="mt-0.5 flex items-center justify-center gap-1">
-                <div className="h-0.5 w-20 sm:w-24 bg-gray-200 rounded-full overflow-hidden">
-                  <div 
-                    className="h-full bg-green-500 rounded-full transition-all duration-500"
-                    style={{ width: '98.7%' }}
-                  />
+                <div>
+                  <p className="text-sm font-medium text-green-800">
+                    Final results announcement expected within the next few hours. Stay tuned for the official declaration.
+                  </p>
+                  <p className="text-sm font-medium text-green-700 mt-0.5">
+                    Natiijada rasmiga ah waxaa lagu dhawaaqayaa saacadaha soo socda. Halkan kala soco shaacinta rasmiga ah.
+                  </p>
                 </div>
-                <span className="text-[7px] sm:text-[8px] font-medium text-gray-700">98.7%</span>
               </div>
             </div>
 
-            {/* Updated vote count text */}
+            {/* Vote Count Complete Text - with smaller Somali */}
             <p className="text-center text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">
-              Vote Count Progress: 98.7% of total votes processed ({Math.round(totalVotes * 0.987).toLocaleString()} votes)
+              Vote Count Complete: 100% of total votes processed ({totalVotes.toLocaleString()} votes)
+              <span className="block text-sm sm:text-base text-gray-600 mt-0.5">
+                Tirinta Codadka: 100% codadka la tiriyey ({totalVotes.toLocaleString()} cod)
+              </span>
             </p>
 
             <div className="flex justify-center space-x-16 sm:space-x-32 mb-4 sm:mb-6">
-              <div className="text-center">
+              {/* CIRRO - Slightly larger */}
+              <div className="text-center scale-110">
                 <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-full overflow-hidden border-4 border-[#fb9304] mx-auto mb-1 sm:mb-2">
                   <Image
                     src="/images/abdirahman.jpg"
@@ -454,22 +378,41 @@ export default function LandingPage() {
                     className="object-cover w-full h-full"
                   />
                 </div>
-                <p className="text-xl sm:text-2xl font-bold text-[#fb9304]">
-                  CIRRO {cirroPercentage.toFixed(1)}%
-                  <svg 
-                    className="inline-block w-5 h-5 sm:w-6 sm:h-6 text-blue-500 ml-1 mb-1"
-                    fill="currentColor" 
-                    viewBox="0 0 24 24"
-                    style={{ verticalAlign: 'middle' }}
-                  >
-                    <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1.177 15l-4.243-4.243 1.415-1.414 2.828 2.828 5.657-5.657 1.415 1.414-7.072 7.072z" />
-                  </svg>
-                  <span className="block text-base sm:text-lg">
-                    ({cirroVotes.toLocaleString()} votes)
+                {/* Name, Percentage and Verification */}
+                <div className="flex items-center justify-center gap-2 mb-0.5">
+                  <span className="text-xl sm:text-2xl font-bold text-[#fb9304]">
+                    CIRRO {cirroPercentageState.toFixed(1)}%
                   </span>
+                  <svg 
+                    className="w-6 h-6 sm:w-7 sm:h-7"
+                    viewBox="0 0 32 32"
+                    fill="none"
+                  >
+                    <path
+                      d="M16 3L4 9C4 17 4 22.5 16 29C28 22.5 28 17 28 9L16 3Z"
+                      fill="#059669"
+                      stroke="#047857"
+                      strokeWidth="1"
+                    />
+                    <path
+                      d="M16 4L5 9.5C5 16.5 5 21.5 16 27.5C27 21.5 27 16.5 27 9.5L16 4Z"
+                      fill="#059669"
+                    />
+                    <path
+                      d="M11 16L14.5 19.5L21 13"
+                      stroke="white"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </div>
+                <p className="text-xl sm:text-2xl font-bold text-[#fb9304]">
+                  ({cirroVotes.toLocaleString()} votes)
                 </p>
               </div>
-              <div className="text-center">
+              {/* BIIXI - Slightly smaller */}
+              <div className="text-center scale-95">
                 <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-full overflow-hidden border-4 border-[#0c6b04] mx-auto mb-1 sm:mb-2">
                   <Image
                     src="/images/biixi.jpeg"
@@ -480,7 +423,7 @@ export default function LandingPage() {
                   />
                 </div>
                 <p className="text-xl sm:text-2xl font-bold text-[#0c6b04]">
-                  BIIXI {biixiPercentage.toFixed(1)}%
+                  BIIXI {biixiPercentageState.toFixed(1)}%
                   <span className="block text-base sm:text-lg">
                     ({biixiVotes.toLocaleString()} votes)
                   </span>
@@ -488,38 +431,83 @@ export default function LandingPage() {
               </div>
             </div>
             
-            {/* Updated progress bar with faster transitions */}
-            <div className="h-8 bg-gray-200 rounded-full overflow-hidden">
-              <div className="flex h-full">
-                <div 
-                  className="bg-[#fb9304] h-full transform transition-all duration-500 ease-out" 
-                  style={{ width: `${cirroPercentage}%` }}
-                />
-                <div 
-                  className="bg-[#0c6b04] h-full transform transition-all duration-500 ease-out" 
-                  style={{ width: `${biixiPercentage}%` }}
-                />
-                <div 
-                  className="bg-gray-400 h-full transform transition-all duration-500 ease-out" 
-                  style={{ width: `${othersPercentage.toFixed(1)}%` }}
-                />
+            {/* Progress bar container with labels */}
+            <div className="relative mb-6">
+              {/* Main progress bar */}
+              <div className="relative h-10 sm:h-12 bg-gray-200 rounded-xl overflow-hidden shadow-inner">
+                <div className="flex h-full">
+                  {/* Cirro's section */}
+                  <div 
+                    className="bg-[#fb9304] h-full transform transition-all duration-500 ease-out relative flex items-center justify-end px-3"
+                    style={{ width: `${cirroPercentage}%` }}
+                  >
+                    <span className="text-white text-xs sm:text-sm font-medium tracking-wider hidden sm:block">
+                      CIRRO {cirroPercentage}%
+                    </span>
+                  </div>
+                  
+                  {/* Biixi's section */}
+                  <div 
+                    className="bg-[#0c6b04] h-full transform transition-all duration-500 ease-out relative flex items-center justify-end px-3"
+                    style={{ width: `${biixiPercentage}%` }}
+                  >
+                    <span className="text-white text-xs sm:text-sm font-medium tracking-wider hidden sm:block">
+                      BIIXI {biixiPercentage}%
+                    </span>
+                  </div>
+
+                  {/* Faisal's section - removed label but kept grey area */}
+                  <div 
+                    className="bg-gray-400 h-full transform transition-all duration-500 ease-out"
+                    style={{ width: `${faisalPercentage}%` }}
+                  />
+                </div>
+              </div>
+
+              {/* Legend below progress bar */}
+              <div className="flex flex-wrap items-center justify-center gap-4 mt-3">
+                {/* Cirro legend */}
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#fb9304]" />
+                  <span className="text-xs text-gray-700 font-medium">
+                    CIRRO ({cirroPercentage}%) - {cirroVotes.toLocaleString()} votes
+                  </span>
+                </div>
+                
+                {/* Biixi legend */}
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#0c6b04]" />
+                  <span className="text-xs text-gray-700 font-medium">
+                    BIIXI ({biixiPercentage}%) - {biixiVotes.toLocaleString()} votes
+                  </span>
+                </div>
+
+                {/* Faisal legend */}
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-gray-400" />
+                  <span className="text-xs text-gray-700 font-medium">
+                    FAISAL ({faisalPercentage}%) - {faisalVotes.toLocaleString()} votes
+                  </span>
+                </div>
+              </div>
+
+              {/* Vote count summary - with Somali */}
+              <div className="text-center mt-4">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 rounded-full text-xs text-gray-600">
+                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Total Votes / Wadarta Codadka: {totalVotes.toLocaleString()}
+                </span>
               </div>
             </div>
-            
-            {/* Scale */}
-            <div className="flex justify-between mt-2 text-sm text-gray-600">
-              <span>0</span>
-              <span>20</span>
-              <span>40</span>
-              <span>50</span>
-              <span>60</span>
-              <span>80</span>
-              <span>100%</span>
-            </div>
-            
-            {/* Notes */}
+
+            {/* Notes - with smaller Somali */}
             <p className="text-gray-500 text-sm mt-4 text-center">
               Notes: Live election results as of November 13, 2024. Results are updated in real-time.
+              <span className="block mt-1 text-xs sm:text-sm">
+                Ogeysiis: Natiijada doorashada ee 13-ka Noofembar 2024. Natiijadu waa mid si toos ah loo cusbooneysiinayo.
+              </span>
             </p>
           </div>
 
@@ -527,12 +515,14 @@ export default function LandingPage() {
           <div className="max-w-3xl mx-auto mb-8">
             <h2 className="text-lg sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-4 text-center">
               Political Party Results
-              <span className="block text-xs sm:text-sm text-red-600 font-normal mt-0.5 sm:mt-1">
-                Still counting - Results are preliminary
+              <span className="block text-xs sm:text-sm text-green-600 font-normal mt-0.5 sm:mt-1">
+                Final Results - Vote Count Complete
               </span>
               <div className="flex items-center justify-center gap-1 sm:gap-2 mt-0.5 sm:mt-1">
-                <div className="w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-red-600 animate-pulse" />
-                <span className="text-[10px] sm:text-xs text-red-600 font-medium">Live update</span>
+                <div className="w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-green-600" />
+                <span className="text-[10px] sm:text-xs text-green-600 font-medium">
+                  100% Counted
+                </span>
               </div>
             </h2>
             <div className="h-[340px] sm:h-80 w-full"> {/* Taller on mobile for better spacing */}
@@ -542,7 +532,7 @@ export default function LandingPage() {
                   layout="vertical"
                   margin={{ 
                     top: 5,
-                    right: width < 640 ? 65 : 150,
+                    right: width < 640 ? 150 : 200,
                     left: width < 640 ? 40 : 80,
                     bottom: 5 
                   }}
@@ -570,33 +560,47 @@ export default function LandingPage() {
                     label={(props) => {
                       const { x, y, value, width } = props;
                       const party = partyData.find(p => p.value === value);
-                      const baseValue = party?.baseValue ?? value;
-                      const trend = value > baseValue ? "▲" : "▼";
-                      const trendColor = value > baseValue ? "#22c55e" : "#ef4444";
+                      let voteCount = 0;
                       
+                      // Map party names to vote counts
+                      switch(party?.name) {
+                        case 'WADDANI': voteCount = 242029; break;
+                        case 'KAAH': voteCount = 135474; break;
+                        case 'KULMIYE': voteCount = 108280; break;
+                        case 'HORSEED': voteCount = 78774; break;
+                        case 'HILAAC': voteCount = 59254; break;
+                        case 'BARWAAQO': voteCount = 17031; break;
+                        case 'UCID': voteCount = 10191; break;
+                        case 'TALO-WADAAG': voteCount = 6569; break;
+                        case 'RAJO': voteCount = 2108; break;
+                        case 'SHACABKA': voteCount = 2040; break;
+                      }
+
                       return (
                         <g>
+                          {/* Percentage */}
                           <text 
-                            x={x + width + (width < 640 ? 3 : 10)}
-                            y={y + (width < 640 ? 11 : 15)}
+                            x={x + width + (width < 640 ? 8 : 15)}
+                            y={y + (width < 640 ? 14 : 18)}
                             fill="#000000" 
-                            fontSize={width < 640 ? 10 : 14}
-                            fontWeight="bold"
+                            fontSize={width < 640 ? 12 : 16}
+                            fontWeight="700"
                             textAnchor="start"
                             style={{ userSelect: 'none' }}
                           >
                             {value.toFixed(1)}%
                           </text>
+                          {/* Vote Count */}
                           <text 
-                            x={x + width + (width < 640 ? 28 : 55)}
-                            y={y + (width < 640 ? 11 : 15)}
-                            fill={trendColor}
-                            fontSize={width < 640 ? 10 : 14}
-                            fontWeight="bold"
+                            x={x + width + (width < 640 ? 45 : 65)}
+                            y={y + (width < 640 ? 14 : 18)}
+                            fill="#666666" 
+                            fontSize={width < 640 ? 11 : 14}
+                            fontWeight="600"
                             textAnchor="start"
                             style={{ userSelect: 'none' }}
                           >
-                            {trend}
+                            ({voteCount.toLocaleString()})
                           </text>
                         </g>
                       );
@@ -614,9 +618,6 @@ export default function LandingPage() {
                 </BarChart>
               </ResponsiveContainer>
             </div>
-            <p className="text-[10px] sm:text-sm text-gray-500 text-center mt-2 sm:mt-4">
-              * Preliminary results - Vote counting in progress
-            </p>
           </div>
 
           {/* Regional Results and Latest News - Modified to only show Regional Results */}
@@ -769,41 +770,7 @@ export default function LandingPage() {
         </button>
       </div>
 
-      {/* Live Visitors Counter - Extra Compact Version with Better Layout */}
-      <div className="fixed top-[4rem] sm:top-20 right-2 sm:right-4 z-50">
-        <div className="bg-black/80 text-white px-3 py-1.5 rounded-full shadow-lg backdrop-blur-sm hover:bg-black/90 transition-all">
-          <div className="flex flex-col gap-0.5">
-            {/* Live Counter */}
-            <div className="flex items-center gap-1.5">
-              <div className="relative">
-                <div className="w-1 h-1 bg-green-500 rounded-full animate-pulse" />
-                <div className="absolute inset-0 w-1 h-1 bg-green-500 rounded-full animate-ping opacity-75" />
-              </div>
-              <div className="flex items-center gap-1">
-                <span className="text-[8px] text-green-400 uppercase tracking-wide">Live</span>
-                <svg 
-                  viewBox="0 0 24 24" 
-                  fill="currentColor" 
-                  className="w-2.5 h-2.5 text-green-400"
-                >
-                  <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clipRule="evenodd" />
-                </svg>
-                <span className="text-[10px] font-bold min-w-[40px] text-right">
-                  {visitorCount.toLocaleString()}
-                </span>
-              </div>
-            </div>
-            
-            {/* Total Visitors */}
-            <div className="flex items-center justify-end gap-1 border-t border-white/10 pt-0.5">
-              <span className="text-[7px] text-gray-400 whitespace-nowrap">Total (3d):</span>
-              <span className="text-[8px] font-bold text-blue-400 min-w-[45px] text-right">
-                {totalVisitors.toLocaleString()}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <LiveVisitorCounter />
     </div>
   )
 }
