@@ -502,7 +502,7 @@ export default function LandingPage() {
                   layout="vertical"
                   margin={{ 
                     top: 5,
-                    right: width < 640 ? 150 : 200,
+                    right: width < 640 ? 100 : 200,
                     left: width < 640 ? 40 : 80,
                     bottom: 5 
                   }}
@@ -510,7 +510,7 @@ export default function LandingPage() {
                 >
                   <XAxis 
                     type="number" 
-                    domain={[0, width < 640 ? 100 : 45]} // Extended domain for mobile
+                    domain={[0, width < 640 ? 45 : 45]} // Changed from 100 to 45 on mobile
                     hide 
                   />
                   <YAxis 
