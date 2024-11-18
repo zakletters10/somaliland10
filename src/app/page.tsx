@@ -1,228 +1,201 @@
 'use client'
 
 import Image from 'next/image'
-import { useState, useEffect, useRef } from 'react'
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from 'recharts';
 import useWindowDimensions from '@/hooks/useWindowDimensions'
-
-const INITIAL_VISITOR_COUNT = 80000; // Start with a stable number
-
-interface PartyData {
-  name: string;
-  value: number;
-  baseValue: number;
-  color: string;
-  qualified: boolean;
-}
 
 export default function LandingPage() {
   const { width } = useWindowDimensions()
 
-  // Fixed vote counts and percentages
-  const totalVotes = 661750;
-  const cirroVotes = 416903;
-  const biixiVotes = 231612;
+  // Static values for the final results
+  const cirroVotes = 415847;
+  const biixiVotes = 232668;
   const faisalVotes = 13235;
+  const totalVotes = cirroVotes + biixiVotes + faisalVotes;
 
-  // Fixed percentages that sum to 100%
-  const cirroPercentage = 63.0;
-  const biixiPercentage = 35.0;
-  const faisalPercentage = 2.0;
+  // Calculate percentages once
+  const cirroPercentage = (cirroVotes / totalVotes) * 100;
+  const biixiPercentage = (biixiVotes / totalVotes) * 100;
+  const faisalPercentage = (faisalVotes / totalVotes) * 100;
 
-  // Calculate total votes and percentages
-  const totalPartyVotes = 661750;
-
-  // Fixed party data with correct calculations and order
-  const [partyData] = useState<PartyData[]>([
+  // Party data for chart
+  const partyData = [
     { 
       name: 'WADDANI', 
-      value: Math.round((242029 / totalPartyVotes) * 100 * 10) / 10, // 36.6%
+      value: Math.round((242029 / totalVotes) * 100 * 10) / 10, // 36.6%
       baseValue: 36.6, 
       color: '#fb9304', 
       qualified: true 
     },
     { 
       name: 'KAAH', 
-      value: Math.round((135474 / totalPartyVotes) * 100 * 10) / 10, // 20.5%
+      value: Math.round((135474 / totalVotes) * 100 * 10) / 10, // 20.5%
       baseValue: 20.5, 
       color: '#eb242b', 
       qualified: true 
     },
     { 
       name: 'KULMIYE', 
-      value: Math.round((108280 / totalPartyVotes) * 100 * 10) / 10, // 16.4%
+      value: Math.round((108280 / totalVotes) * 100 * 10) / 10, // 16.4%
       baseValue: 16.4, 
       color: '#0c6c04', 
       qualified: true 
     },
     { 
       name: 'HORSEED', 
-      value: Math.round((78774 / totalPartyVotes) * 100 * 10) / 10, // 11.9%
+      value: Math.round((78774 / totalVotes) * 100 * 10) / 10, // 11.9%
       baseValue: 11.9, 
       color: '#87d662', 
       qualified: false 
     },
     { 
       name: 'HILAAC', 
-      value: Math.round((59254 / totalPartyVotes) * 100 * 10) / 10, // 9.0%
+      value: Math.round((59254 / totalVotes) * 100 * 10) / 10, // 9.0%
       baseValue: 9.0, 
       color: '#666666', 
       qualified: false 
     },
     { 
       name: 'BARWAAQO', 
-      value: Math.round((17031 / totalPartyVotes) * 100 * 10) / 10, // 2.6%
+      value: Math.round((17031 / totalVotes) * 100 * 10) / 10, // 2.6%
       baseValue: 2.6, 
       color: '#999999', 
       qualified: false 
     },
     { 
       name: 'UCID', 
-      value: Math.round((10191 / totalPartyVotes) * 100 * 10) / 10, // 1.5%
+      value: Math.round((10191 / totalVotes) * 100 * 10) / 10, // 1.5%
       baseValue: 1.5, 
       color: '#999999', 
       qualified: false 
     },
     { 
       name: 'TALO-WADAAG', 
-      value: Math.round((6569 / totalPartyVotes) * 100 * 10) / 10, // 1.0%
+      value: Math.round((6569 / totalVotes) * 100 * 10) / 10, // 1.0%
       baseValue: 1.0, 
       color: '#999999', 
       qualified: false 
     },
     { 
       name: 'RAJO', 
-      value: Math.round((2108 / totalPartyVotes) * 100 * 10) / 10, // 0.3%
+      value: Math.round((2108 / totalVotes) * 100 * 10) / 10, // 0.3%
       baseValue: 0.3, 
       color: '#999999', 
       qualified: false 
     },
     { 
       name: 'SHACABKA', 
-      value: Math.round((2040 / totalPartyVotes) * 100 * 10) / 10, // 0.3%
+      value: Math.round((2040 / totalVotes) * 100 * 10) / 10, // 0.3%
       baseValue: 0.3, 
       color: '#999999', 
       qualified: false 
     }
-  ]);
+  ];
 
-  // Remove all animation-related state and effects
-  const [timeAgo] = useState('Final Results');
+  // Final percentages and processed state
+  // const processedPercentage = 100;
 
-  // State declarations
-  const [cirroVotesState, setCirroVotes] = useState(cirroVotes);
-  const [biixiVotesState, setBiixiVotes] = useState(biixiVotes);
-  const [processedPercentage, setProcessedPercentage] = useState(100);
-
-  // Percentage state
-  const [cirroPercentageState, setCirroPercentage] = useState(cirroPercentage);
-  const [biixiPercentageState, setBiixiPercentage] = useState(biixiPercentage);
-
-  // Update refs
-  const cirroRef = useRef(cirroPercentageState);
-  const biixiRef = useRef(biixiPercentageState);
-  const processedRef = useRef(100);
-  const cirroVotesRef = useRef(cirroVotesState);
-  const biixiVotesRef = useRef(biixiVotesState);
+  // No need for state or refs since these are final results
+  // Just use cirroPercentage and biixiPercentage directly from the calculations above
 
   // Initialize state with calculated value
-  const [visitorCount, setVisitorCount] = useState(INITIAL_VISITOR_COUNT);
-  const [totalVisitors, setTotalVisitors] = useState(1500000);
+  // const [visitorCount, setVisitorCount] = useState(INITIAL_VISITOR_COUNT);
+  // const [totalVisitors, setTotalVisitors] = useState(1500000);
 
   // Live Visitors Counter Component
-  const LiveVisitorCounter = () => {
-    const [visitorCount, setVisitorCount] = useState(152000);
-    const [totalVisitors, setTotalVisitors] = useState(2145677);
-    const [lastHourChecked, setLastHourChecked] = useState(new Date().getHours());
+  // const LiveVisitorCounter = () => {
+  //   const [visitorCount, setVisitorCount] = useState(152000);
+  //   const [totalVisitors, setTotalVisitors] = useState(2145677);
+  //   const [lastHourChecked, setLastHourChecked] = useState(new Date().getHours());
 
-    useEffect(() => {
-      // Check and add hourly increase
-      const checkHourlyIncrease = () => {
-        const currentHour = new Date().getHours();
-        if (currentHour !== lastHourChecked) {
-          setVisitorCount(prev => prev + 2000); // Add 2000 for the new hour
-          setTotalVisitors(prev => prev + 2000);
-          setLastHourChecked(currentHour);
-        }
-      };
+  //   useEffect(() => {
+  //     // Check and add hourly increase
+  //     const checkHourlyIncrease = () => {
+  //       const currentHour = new Date().getHours();
+  //       if (currentHour !== lastHourChecked) {
+  //         setVisitorCount(prev => prev + 2000); // Add 2000 for the new hour
+  //         setTotalVisitors(prev => prev + 2000);
+  //         setLastHourChecked(currentHour);
+  //       }
+  //     };
 
-      // Random fluctuations in visitors
-      const updateVisitors = () => {
-        checkHourlyIncrease();
+  //     // Random fluctuations in visitors
+  //     const updateVisitors = () => {
+  //       checkHourlyIncrease();
 
-        // Generate random change (-50 to +100)
-        const changeTypes = [
-          { change: -50, probability: 0.15 },
-          { change: -30, probability: 0.15 },
-          { change: 10, probability: 0.2 },
-          { change: 50, probability: 0.3 },
-          { change: 100, probability: 0.2 }
-        ];
+  //       // Generate random change (-50 to +100)
+  //       const changeTypes = [
+  //         { change: -50, probability: 0.15 },
+  //         { change: -30, probability: 0.15 },
+  //         { change: 10, probability: 0.2 },
+  //         { change: 50, probability: 0.3 },
+  //         { change: 100, probability: 0.2 }
+  //       ];
 
-        const random = Math.random();
-        let cumulativeProbability = 0;
-        let selectedChange = 0;
+  //       const random = Math.random();
+  //       let cumulativeProbability = 0;
+  //       let selectedChange = 0;
 
-        for (const type of changeTypes) {
-          cumulativeProbability += type.probability;
-          if (random <= cumulativeProbability) {
-            selectedChange = type.change;
-            break;
-          }
-        }
+  //       for (const type of changeTypes) {
+  //         cumulativeProbability += type.probability;
+  //         if (random <= cumulativeProbability) {
+  //           selectedChange = type.change;
+  //           break;
+  //         }
+  //       }
 
-        setVisitorCount(prev => {
-          const newCount = prev + selectedChange;
-          // Update total visitors only for increases
-          if (selectedChange > 0) {
-            setTotalVisitors(total => total + selectedChange);
-          }
-          return newCount;
-        });
-      };
+  //       setVisitorCount(prev => {
+  //         const newCount = prev + selectedChange;
+  //         // Update total visitors only for increases
+  //         if (selectedChange > 0) {
+  //           setTotalVisitors(total => total + selectedChange);
+  //         }
+  //         return newCount;
+  //       });
+  //     };
 
-      // Update every 3 seconds with random changes
-      const interval = setInterval(updateVisitors, 3000);
-      return () => clearInterval(interval);
-    }, [lastHourChecked]);
+  //     // Update every 3 seconds with random changes
+  //     const interval = setInterval(updateVisitors, 3000);
+  //     return () => clearInterval(interval);
+  //   }, [lastHourChecked]);
 
-    return (
-      <div className="fixed top-[4rem] sm:top-20 right-2 sm:right-4 z-50">
-        <div className="bg-black/80 text-white px-3 py-1.5 rounded-full shadow-lg backdrop-blur-sm hover:bg-black/90 transition-all">
-          <div className="flex flex-col gap-0.5">
-            {/* Live Counter */}
-            <div className="flex items-center gap-1.5">
-              <div className="relative">
-                <div className="w-1 h-1 bg-green-500 rounded-full animate-pulse" />
-                <div className="absolute inset-0 w-1 h-1 bg-green-500 rounded-full animate-ping opacity-75" />
-              </div>
-              <div className="flex items-center gap-1">
-                <span className="text-[8px] text-green-400 uppercase tracking-wide">Live</span>
-                <svg 
-                  viewBox="0 0 24 24" 
-                  fill="currentColor" 
-                  className="w-2.5 h-2.5 text-green-400"
-                >
-                  <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clipRule="evenodd" />
-                </svg>
-                <span className="text-[10px] font-bold min-w-[40px] text-right">
-                  {visitorCount.toLocaleString()}
-                </span>
-              </div>
-            </div>
-            
-            {/* Total Visitors */}
-            <div className="flex items-center justify-end gap-1 border-t border-white/10 pt-0.5">
-              <span className="text-[7px] text-gray-400 whitespace-nowrap">Total (3d):</span>
-              <span className="text-[8px] font-bold text-blue-400 min-w-[45px] text-right">
-                {totalVisitors.toLocaleString()}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
+  //   return (
+  //     <div className="fixed top-[4rem] sm:top-20 right-2 sm:right-4 z-50">
+  //       <div className="bg-black/80 text-white px-3 py-1.5 rounded-full shadow-lg backdrop-blur-sm hover:bg-black/90 transition-all">
+  //         <div className="flex flex-col gap-0.5">
+  //           {/* Live Counter */}
+  //           <div className="flex items-center gap-1.5">
+  //             <div className="relative">
+  //               <div className="w-1 h-1 bg-green-500 rounded-full animate-pulse" />
+  //               <div className="absolute inset-0 w-1 h-1 bg-green-500 rounded-full animate-ping opacity-75" />
+  //             </div>
+  //             <div className="flex items-center gap-1">
+  //               <span className="text-[8px] text-green-400 uppercase tracking-wide">Live</span>
+  //               <svg 
+  //                 viewBox="0 0 24 24" 
+  //                 fill="currentColor" 
+  //                 className="w-2.5 h-2.5 text-green-400"
+  //               >
+  //                 <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clipRule="evenodd" />
+  //               </svg>
+  //               <span className="text-[10px] font-bold min-w-[40px] text-right">
+  //                 {visitorCount.toLocaleString()}
+  //               </span>
+  //             </div>
+  //           </div>
+  //           
+  //           {/* Total Visitors */}
+  //           <div className="flex items-center justify-end gap-1 border-t border-white/10 pt-0.5">
+  //             <span className="text-[7px] text-gray-400 whitespace-nowrap">Total (3d):</span>
+  //             <span className="text-[8px] font-bold text-blue-400 min-w-[45px] text-right">
+  //               {totalVisitors.toLocaleString()}
+  //             </span>
+  //           </div>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   );
+  // };
 
   // Add share functionality
   const handleShare = async () => {
@@ -230,9 +203,9 @@ export default function LandingPage() {
       const shareData = {
         title: 'Somaliland Presidential Elections 2024 - Live Results',
         text: `🗳️ Live Election Results:\n` +
-              `Cirro: ${cirroPercentageState.toFixed(1)}% (${cirroVotes.toLocaleString()} votes)\n` +
-              `Biixi: ${biixiPercentageState.toFixed(1)}% (${biixiVotes.toLocaleString()} votes)\n` +
-              `${processedPercentage.toFixed(1)}% of votes processed`,
+              `Cirro: ${cirroPercentage.toFixed(1)}% (${cirroVotes.toLocaleString()} votes)\n` +
+              `Biixi: ${biixiPercentage.toFixed(1)}% (${biixiVotes.toLocaleString()} votes)\n` +
+              `100% of votes processed`,
         url: window.location.href,
       };
 
@@ -358,10 +331,10 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Vote Count Complete Text - with smaller Somali */}
-            <p className="text-center text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">
+            {/* Vote Count Complete Text - with smaller text */}
+            <p className="text-center text-base sm:text-lg font-bold text-gray-900 mb-4 sm:mb-6">
               Vote Count Complete: 100% of total votes processed ({totalVotes.toLocaleString()} votes)
-              <span className="block text-sm sm:text-base text-gray-600 mt-0.5">
+              <span className="block text-xs sm:text-sm text-gray-600 mt-0.5">
                 Tirinta Codadka: 100% codadka la tiriyey ({totalVotes.toLocaleString()} cod)
               </span>
             </p>
@@ -381,7 +354,7 @@ export default function LandingPage() {
                 {/* Name, Percentage and Verification */}
                 <div className="flex items-center justify-center gap-2 mb-0.5">
                   <span className="text-xl sm:text-2xl font-bold text-[#fb9304]">
-                    CIRRO {cirroPercentageState.toFixed(1)}%
+                    CIRRO {cirroPercentage.toFixed(1)}%
                   </span>
                   <svg 
                     className="w-6 h-6 sm:w-7 sm:h-7"
@@ -423,7 +396,7 @@ export default function LandingPage() {
                   />
                 </div>
                 <p className="text-xl sm:text-2xl font-bold text-[#0c6b04]">
-                  BIIXI {biixiPercentageState.toFixed(1)}%
+                  BIIXI {biixiPercentage.toFixed(1)}%
                   <span className="block text-base sm:text-lg">
                     ({biixiVotes.toLocaleString()} votes)
                   </span>
@@ -439,27 +412,27 @@ export default function LandingPage() {
                   {/* Cirro's section */}
                   <div 
                     className="bg-[#fb9304] h-full transform transition-all duration-500 ease-out relative flex items-center justify-end px-3"
-                    style={{ width: `${cirroPercentage}%` }}
+                    style={{ width: `${cirroPercentage.toFixed(1)}%` }}
                   >
                     <span className="text-white text-xs sm:text-sm font-medium tracking-wider hidden sm:block">
-                      CIRRO {cirroPercentage}%
+                      CIRRO {cirroPercentage.toFixed(1)}%
                     </span>
                   </div>
                   
                   {/* Biixi's section */}
                   <div 
                     className="bg-[#0c6b04] h-full transform transition-all duration-500 ease-out relative flex items-center justify-end px-3"
-                    style={{ width: `${biixiPercentage}%` }}
+                    style={{ width: `${biixiPercentage.toFixed(1)}%` }}
                   >
                     <span className="text-white text-xs sm:text-sm font-medium tracking-wider hidden sm:block">
-                      BIIXI {biixiPercentage}%
+                      BIIXI {biixiPercentage.toFixed(1)}%
                     </span>
                   </div>
 
                   {/* Faisal's section - removed label but kept grey area */}
                   <div 
                     className="bg-gray-400 h-full transform transition-all duration-500 ease-out"
-                    style={{ width: `${faisalPercentage}%` }}
+                    style={{ width: `${faisalPercentage.toFixed(1)}%` }}
                   />
                 </div>
               </div>
@@ -470,7 +443,7 @@ export default function LandingPage() {
                 <div className="flex items-center gap-1.5">
                   <div className="w-2.5 h-2.5 rounded-full bg-[#fb9304]" />
                   <span className="text-xs text-gray-700 font-medium">
-                    CIRRO ({cirroPercentage}%) - {cirroVotes.toLocaleString()} votes
+                    CIRRO ({cirroPercentage.toFixed(1)}%) - {cirroVotes.toLocaleString()} votes
                   </span>
                 </div>
                 
@@ -478,7 +451,7 @@ export default function LandingPage() {
                 <div className="flex items-center gap-1.5">
                   <div className="w-2.5 h-2.5 rounded-full bg-[#0c6b04]" />
                   <span className="text-xs text-gray-700 font-medium">
-                    BIIXI ({biixiPercentage}%) - {biixiVotes.toLocaleString()} votes
+                    BIIXI ({biixiPercentage.toFixed(1)}%) - {biixiVotes.toLocaleString()} votes
                   </span>
                 </div>
 
@@ -486,7 +459,7 @@ export default function LandingPage() {
                 <div className="flex items-center gap-1.5">
                   <div className="w-2.5 h-2.5 rounded-full bg-gray-400" />
                   <span className="text-xs text-gray-700 font-medium">
-                    FAISAL ({faisalPercentage}%) - {faisalVotes.toLocaleString()} votes
+                    FAISAL ({faisalPercentage.toFixed(1)}%) - {faisalVotes.toLocaleString()} votes
                   </span>
                 </div>
               </div>
@@ -502,12 +475,9 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Notes - with smaller Somali */}
+            {/* Notes - removed Somali translation */}
             <p className="text-gray-500 text-sm mt-4 text-center">
               Notes: Live election results as of November 13, 2024. Results are updated in real-time.
-              <span className="block mt-1 text-xs sm:text-sm">
-                Ogeysiis: Natiijada doorashada ee 13-ka Noofembar 2024. Natiijadu waa mid si toos ah loo cusbooneysiinayo.
-              </span>
             </p>
           </div>
 
@@ -769,8 +739,6 @@ export default function LandingPage() {
           </div>
         </button>
       </div>
-
-      <LiveVisitorCounter />
     </div>
   )
 }
