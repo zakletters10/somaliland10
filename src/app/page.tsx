@@ -305,10 +305,10 @@ export default function LandingPage() {
             </h1>
 
             {/* Announcement Banner - Now directly after the title */}
-            <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-4 shadow-sm">
-              <div className="flex items-center gap-2">
+            <div className="bg-green-50 border border-green-200 rounded-lg p-2 mb-3 shadow-sm">
+              <div className="flex items-center gap-1.5">
                 <svg 
-                  className="w-5 h-5 text-green-600 flex-shrink-0" 
+                  className="w-4 h-4 text-green-600 flex-shrink-0" 
                   fill="none" 
                   viewBox="0 0 24 24" 
                   stroke="currentColor"
@@ -321,10 +321,10 @@ export default function LandingPage() {
                   />
                 </svg>
                 <div>
-                  <p className="text-sm font-medium text-green-800">
+                  <p className="text-xs font-medium text-green-800">
                     Final results announcement expected within the next few hours. Stay tuned for the official declaration.
                   </p>
-                  <p className="text-sm font-medium text-green-700 mt-0.5">
+                  <p className="text-xs font-medium text-green-700 mt-0.5">
                     Natiijada rasmiga ah waxaa lagu dhawaaqayaa saacadaha soo socda. Halkan kala soco shaacinta rasmiga ah.
                   </p>
                 </div>
@@ -332,10 +332,10 @@ export default function LandingPage() {
             </div>
 
             {/* Vote Count Complete Text - with smaller text */}
-            <p className="text-center text-base sm:text-lg font-bold text-gray-900 mb-4 sm:mb-6">
-              Vote Count Complete: 100% of total votes processed ({totalVotes.toLocaleString()} votes)
-              <span className="block text-xs sm:text-sm text-gray-600 mt-0.5">
-                Tirinta Codadka: 100% codadka la tiriyey ({totalVotes.toLocaleString()} cod)
+            <p className="text-center text-sm sm:text-base font-bold text-gray-900 mb-4 sm:mb-6">
+              Vote Count Complete: 100%
+              <span className="block text-[11px] sm:text-sm text-gray-600 mt-0.5">
+                Tirinta Codadka: 100% codadka la tiriyey
               </span>
             </p>
 
