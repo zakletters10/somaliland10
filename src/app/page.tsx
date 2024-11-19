@@ -8,37 +8,37 @@ export default function LandingPage() {
   const { width } = useWindowDimensions()
 
   // Static values for the final results
-  const cirroVotes = 415847;
-  const biixiVotes = 232668;
-  const faisalVotes = 13235;
-  const totalVotes = cirroVotes + biixiVotes + faisalVotes;
+  const totalVotes = 638126;  // New total votes
+  const cirroVotes = 407885;  // 63.92% of 638126
+  const biixiVotes = 222132;  // 34.81% of 638126
+  const faisalVotes = 8109;   // remaining votes (approximately 1.27%)
 
-  // Calculate percentages once
-  const cirroPercentage = (cirroVotes / totalVotes) * 100;
-  const biixiPercentage = (biixiVotes / totalVotes) * 100;
-  const faisalPercentage = (faisalVotes / totalVotes) * 100;
+  // Calculate percentages once - using exact percentages provided
+  const cirroPercentage = 63.92;
+  const biixiPercentage = 34.81;
+  const faisalPercentage = 1.27;  // 100 - 63.92 - 34.81
 
   // Party data for chart
   const partyData = [
     { 
       name: 'WADDANI', 
-      value: Math.round((242029 / totalVotes) * 100 * 10) / 10, // 36.6%
-      baseValue: 36.6, 
+      value: Math.round((216284 / totalVotes) * 100 * 10) / 10,
+      baseValue: 33.7, 
       color: '#fb9304', 
       qualified: true 
     },
     { 
-      name: 'KAAH', 
-      value: Math.round((135474 / totalVotes) * 100 * 10) / 10, // 20.5%
+      name: 'KULMIYE', 
+      value: Math.round((131507 / totalVotes) * 100 * 10) / 10,
       baseValue: 20.5, 
-      color: '#eb242b', 
+      color: '#0c6c04', 
       qualified: true 
     },
     { 
-      name: 'KULMIYE', 
-      value: Math.round((108280 / totalVotes) * 100 * 10) / 10, // 16.4%
-      baseValue: 16.4, 
-      color: '#0c6c04', 
+      name: 'KAAH', 
+      value: Math.round((108100 / totalVotes) * 100 * 10) / 10,
+      baseValue: 16.8, 
+      color: '#eb242b', 
       qualified: true 
     },
     { 
@@ -257,18 +257,18 @@ export default function LandingPage() {
 
       <main className="flex-grow">
         <div className="max-w-7xl mx-auto py-1 sm:py-6 px-4 sm:px-6 lg:px-8">
-          {/* Enhanced Watermark with Live Status */}
+          {/* Enhanced Watermark with Confirmation Status */}
           <div className="text-center mt-16 sm:mt-8 mb-1 sm:mb-2">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full 
                           bg-gradient-to-r from-green-50 to-green-100 
                           border border-green-200 shadow-sm hover:shadow-md 
                           transition-all duration-300">
-              {/* Live Indicator - Increased sizes */}
+              {/* Confirmation Indicator */}
               <div className="relative flex items-center gap-1.5">
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                 <div className="absolute inset-0 w-2 h-2 bg-green-500 rounded-full animate-ping opacity-75"></div>
-                <span className="text-[10px] sm:text-xs text-green-600 font-semibold uppercase">Live</span>
-                <span className="text-[10px] sm:text-xs text-green-600">Toos</span>
+                <span className="text-[10px] sm:text-xs text-green-600 font-semibold uppercase">Results Confirmed</span>
+                <span className="text-[10px] sm:text-xs text-green-600">Natiijada Xaqiijisay</span>
               </div>
               
               {/* Divider */}
@@ -303,33 +303,6 @@ export default function LandingPage() {
                 DOORASHADA MADAXWEYNAHA 13.11.2024
               </span>
             </h1>
-
-            {/* Announcement Banner - Now directly after the title */}
-            <div className="bg-green-50 border border-green-200 rounded-lg p-2 mb-3 shadow-sm">
-              <div className="flex items-center gap-1.5">
-                <svg 
-                  className="w-4 h-4 text-green-600 flex-shrink-0" 
-                  fill="none" 
-                  viewBox="0 0 24 24" 
-                  stroke="currentColor"
-                >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth={2} 
-                    d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" 
-                  />
-                </svg>
-                <div>
-                  <p className="text-xs font-medium text-green-800">
-                    Final results announcement expected within the next few hours. Stay tuned for the official declaration.
-                  </p>
-                  <p className="text-xs font-medium text-green-700 mt-0.5">
-                    Natiijada rasmiga ah waxaa lagu dhawaaqayaa saacadaha soo socda. Halkan kala soco shaacinta rasmiga ah.
-                  </p>
-                </div>
-              </div>
-            </div>
 
             {/* Vote Count Complete Text - with smaller text */}
             <p className="text-center text-sm sm:text-base font-bold text-gray-900 mb-4 sm:mb-6">
@@ -669,10 +642,23 @@ export default function LandingPage() {
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">
                 Abdirahman Mohamed Abdullahi
               </h2>
-              <p className="mt-2 sm:mt-3 text-lg sm:text-xl lg:text-2xl font-extrabold text-green-600">
+              <p className="mt-2 sm:mt-3 text-lg sm:text-xl lg:text-2xl font-extrabold text-green-600 flex items-center justify-center gap-2">
                 President-elect
-                <span className="text-sm sm:text-base font-normal text-gray-500 ml-2">
-                  (pending official confirmation)
+                <svg 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 inline-block"
+                  stroke="currentColor" 
+                >
+                  <path 
+                    d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" 
+                    strokeWidth="1.5" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <span className="text-sm sm:text-base font-normal text-gray-500">
+                  (Confirmed)
                 </span>
               </p>
               <p className="mt-1 sm:mt-2 text-base sm:text-lg font-bold text-gray-500">
