@@ -22,72 +22,72 @@ export default function LandingPage() {
   const partyData = [
     { 
       name: 'WADDANI', 
-      value: Math.round((216284 / totalVotes) * 100 * 10) / 10,
-      baseValue: 33.7, 
-      color: '#fb9304', 
-      qualified: true 
-    },
-    { 
-      name: 'KULMIYE', 
-      value: Math.round((131507 / totalVotes) * 100 * 10) / 10,
-      baseValue: 20.5, 
-      color: '#0c6c04', 
+      value: Math.round((241631 / totalVotes) * 100 * 10) / 10, // 37.87%
+      baseValue: 37.9, 
+      color: '#fb9304',  // Original WADDANI orange
       qualified: true 
     },
     { 
       name: 'KAAH', 
-      value: Math.round((108100 / totalVotes) * 100 * 10) / 10,
-      baseValue: 16.8, 
-      color: '#eb242b', 
+      value: Math.round((135474 / totalVotes) * 100 * 10) / 10, // 21.23%
+      baseValue: 21.2, 
+      color: '#eb242b',  // Original KAAH red
+      qualified: true 
+    },
+    { 
+      name: 'KULMIYE', 
+      value: Math.round((108280 / totalVotes) * 100 * 10) / 10, // 16.97%
+      baseValue: 17.0, 
+      color: '#0c6c04',  // Original KULMIYE green
       qualified: true 
     },
     { 
       name: 'HORSEED', 
-      value: Math.round((78774 / totalVotes) * 100 * 10) / 10, // 11.9%
-      baseValue: 11.9, 
-      color: '#87d662', 
+      value: Math.round((78774 / totalVotes) * 100 * 10) / 10,  // 12.34%
+      baseValue: 12.3, 
+      color: '#64748b',  // Muted slate
       qualified: false 
     },
     { 
       name: 'HILAAC', 
-      value: Math.round((59254 / totalVotes) * 100 * 10) / 10, // 9.0%
-      baseValue: 9.0, 
-      color: '#666666', 
+      value: Math.round((59254 / totalVotes) * 100 * 10) / 10,  // 9.29%
+      baseValue: 9.3, 
+      color: '#94a3b8',  // Lighter slate
       qualified: false 
     },
     { 
       name: 'BARWAAQO', 
-      value: Math.round((17031 / totalVotes) * 100 * 10) / 10, // 2.6%
-      baseValue: 2.6, 
-      color: '#999999', 
+      value: Math.round((17031 / totalVotes) * 100 * 10) / 10,  // 2.67%
+      baseValue: 2.7, 
+      color: '#cbd5e1',  // Even lighter slate
       qualified: false 
     },
     { 
       name: 'UCID', 
-      value: Math.round((10191 / totalVotes) * 100 * 10) / 10, // 1.5%
-      baseValue: 1.5, 
-      color: '#999999', 
+      value: Math.round((10191 / totalVotes) * 100 * 10) / 10,  // 1.60%
+      baseValue: 1.6, 
+      color: '#e2e8f0',  // Very light slate
       qualified: false 
     },
     { 
       name: 'TALO-WADAAG', 
-      value: Math.round((6569 / totalVotes) * 100 * 10) / 10, // 1.0%
+      value: Math.round((6569 / totalVotes) * 100 * 10) / 10,   // 1.03%
       baseValue: 1.0, 
-      color: '#999999', 
+      color: '#f1f5f9',  // Extremely light slate
       qualified: false 
     },
     { 
       name: 'RAJO', 
-      value: Math.round((2108 / totalVotes) * 100 * 10) / 10, // 0.3%
+      value: Math.round((2108 / totalVotes) * 100 * 10) / 10,   // 0.33%
       baseValue: 0.3, 
-      color: '#999999', 
+      color: '#f8fafc',  // Almost white slate
       qualified: false 
     },
     { 
       name: 'SHACABKA', 
-      value: Math.round((2040 / totalVotes) * 100 * 10) / 10, // 0.3%
+      value: Math.round((2040 / totalVotes) * 100 * 10) / 10,   // 0.32%
       baseValue: 0.3, 
-      color: '#999999', 
+      color: '#f8fafc',  // Almost white slate
       qualified: false 
     }
   ];
