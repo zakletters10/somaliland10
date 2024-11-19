@@ -268,7 +268,7 @@ export default function LandingPage() {
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                 <div className="absolute inset-0 w-2 h-2 bg-green-500 rounded-full animate-ping opacity-75"></div>
                 <span className="text-[10px] sm:text-xs text-green-600 font-semibold uppercase">Results Confirmed</span>
-                <span className="text-[10px] sm:text-xs text-green-600">Natiijada Xaqiijisay</span>
+                <span className="text-[10px] sm:text-xs text-green-600">Natiijada rasmiga ah</span>
               </div>
               
               {/* Divider */}
