@@ -8,15 +8,15 @@ export default function LandingPage() {
   const { width } = useWindowDimensions()
 
   // Static values for the final results
-  const totalVotes = 638126;  // New total votes
-  const cirroVotes = 407885;  // 63.92% of 638126
-  const biixiVotes = 222132;  // 34.81% of 638126
-  const faisalVotes = 8109;   // remaining votes (approximately 1.27%)
+  const totalVotes = 641574;  // New total votes
+  const cirroVotes = 407908;  // 63.92%
+  const biixiVotes = 225519;  // 34.81%
+  const faisalVotes = 8148;   // 1.27%
 
   // Calculate percentages once - using exact percentages provided
   const cirroPercentage = 63.92;
   const biixiPercentage = 34.81;
-  const faisalPercentage = 1.27;  // 100 - 63.92 - 34.81
+  const faisalPercentage = 1.27;
 
   // Party data for chart
   const partyData = [
